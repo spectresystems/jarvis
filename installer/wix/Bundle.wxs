@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<?if $(var.Platform) = "x64" ?>
+    <?define InstallFolder = "[ProgramFiles64Folder]Jarvis" ?>
+    <?define UpgradeCode = "60728E84-FF24-43AB-9DAC-EA0936B3F615" ?>
+<?else ?>
+    <?define InstallFolder = "[ProgramFilesFolder]Jarvis" ?>
+    <?define UpgradeCode = "B74AD5B8-73DF-4389-97FF-4EDA5D82238D" ?>
+<?endif ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" 
+     xmlns:bal="http://schemas.microsoft.com/wix/BalExtension" 
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <Bundle Name="Jarvis" Manufacturer="Spectre Systems AB" UpgradeCode="$(var.UpgradeCode)" Version="$(var.Version)" 
+            IconSourceFile="$(var.ResourceDirectory)\gfx\Jarvis.ico">
+
+        <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
+            <bal:WixStandardBootstrapperApplication ShowVersion="yes" 
+                                                    LicenseFile="$(var.ResourceDirectory)/installer/LICENSE.rtf" 
+                                                    LogoFile="$(var.ResourceDirectory)/installer/Logo.png" />
+        </BootstrapperApplicationRef>
+
+        <Variable Name="InstallFolder" Type="string" Value="$(var.InstallFolder)"/>
+        <Variable Name="LaunchTarget" Value="[InstallFolder]\Jarvis.exe"/>
+
+        <Chain>
+
+            <!-- .NET 4.7 Redist -->
+            <PackageGroupRef Id="NetFx47Redist"/>
+
+            <!-- Rollback boundary -->
+            <RollbackBoundary />
+
+            <!-- Jarvis -->
+            <MsiPackage Id="JarvisPackage" Compressed="yes" SourceFile="$(var.JarvisInstaller)">
+                <MsiProperty Name="INSTALLDIR" Value="[InstallFolder]" />
+            </MsiPackage>
+
+        </Chain>
+    </Bundle>
+</Wix>

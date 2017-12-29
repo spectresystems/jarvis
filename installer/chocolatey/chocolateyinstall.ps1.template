@@ -1,0 +1,7 @@
+﻿﻿$packageName = 'jarvis'
+$installerType = 'exe'
+$url = 'https://github.com/spectresystems/jarvis/releases/download/v%{Version}/Jarvis-%{Version}-x64.exe'
+$silentArgs = '/quiet'
+$validExitCodes = @(0,3010)
+
+Install-ChocolateyPackage $packageName $installerType $silentArgs $url $url64 -validExitCodes $validExitCodes

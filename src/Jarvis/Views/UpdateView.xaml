@@ -1,0 +1,30 @@
+﻿<Window x:Class="Jarvis.Views.UpdateView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Topmost="True"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        SizeToContent="WidthAndHeight" 
+        Title="Update available">
+
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBlock Margin="0,0,5,0">A new version of Jarvis is available:</TextBlock>
+            <TextBlock x:Name="Version" FontWeight="Bold" />
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="OpenBrowser" IsDefault="True" Padding="5" Content="Open in browser..." Margin="0,0,10,0" />
+            <Button x:Name="CloseDialog" Padding="5" Content="Skip for now" />
+        </StackPanel>
+    </Grid>
+</Window>

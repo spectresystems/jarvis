@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis", "Jarvis\Jarvis.csproj", "{7C90B0C6-A0F6-4E4B-BE77-A81F893E167E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis.Core", "Jarvis.Core\Jarvis.Core.csproj", "{5826D320-9026-4BE9-8C82-893C55B80871}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis.Addin.Files", "Jarvis.Addin.Files\Jarvis.Addin.Files.csproj", "{6E2C9A93-08D3-42C8-9822-9C17D118E646}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Addins", "Addins", "{511CB402-AE1B-4E3B-BFA1-80E585EE3AB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis.Addin.Google", "Jarvis.Addin.Google\Jarvis.Addin.Google.csproj", "{630865D0-C44B-41BD-AA6E-4697A4A12BD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis.Addin.Wikipedia", "Jarvis.Addin.Wikipedia\Jarvis.Addin.Wikipedia.csproj", "{CBB05832-5634-4611-ADA1-E3793C5765D6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jarvis.Tests", "Jarvis.Tests\Jarvis.Tests.csproj", "{B3874102-B91F-408C-A32C-A1F8F8921376}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C90B0C6-A0F6-4E4B-BE77-A81F893E167E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C90B0C6-A0F6-4E4B-BE77-A81F893E167E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C90B0C6-A0F6-4E4B-BE77-A81F893E167E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C90B0C6-A0F6-4E4B-BE77-A81F893E167E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5826D320-9026-4BE9-8C82-893C55B80871}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5826D320-9026-4BE9-8C82-893C55B80871}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5826D320-9026-4BE9-8C82-893C55B80871}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5826D320-9026-4BE9-8C82-893C55B80871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E2C9A93-08D3-42C8-9822-9C17D118E646}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E2C9A93-08D3-42C8-9822-9C17D118E646}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E2C9A93-08D3-42C8-9822-9C17D118E646}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E2C9A93-08D3-42C8-9822-9C17D118E646}.Release|Any CPU.Build.0 = Release|Any CPU
+		{630865D0-C44B-41BD-AA6E-4697A4A12BD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{630865D0-C44B-41BD-AA6E-4697A4A12BD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{630865D0-C44B-41BD-AA6E-4697A4A12BD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{630865D0-C44B-41BD-AA6E-4697A4A12BD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBB05832-5634-4611-ADA1-E3793C5765D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB05832-5634-4611-ADA1-E3793C5765D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB05832-5634-4611-ADA1-E3793C5765D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB05832-5634-4611-ADA1-E3793C5765D6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B3874102-B91F-408C-A32C-A1F8F8921376}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B3874102-B91F-408C-A32C-A1F8F8921376}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B3874102-B91F-408C-A32C-A1F8F8921376}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B3874102-B91F-408C-A32C-A1F8F8921376}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6E2C9A93-08D3-42C8-9822-9C17D118E646} = {511CB402-AE1B-4E3B-BFA1-80E585EE3AB5}
+		{630865D0-C44B-41BD-AA6E-4697A4A12BD9} = {511CB402-AE1B-4E3B-BFA1-80E585EE3AB5}
+		{CBB05832-5634-4611-ADA1-E3793C5765D6} = {511CB402-AE1B-4E3B-BFA1-80E585EE3AB5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7AC5E44D-16BB-4EA9-97C7-0B74E46083C4}
+	EndGlobalSection
+EndGlobal

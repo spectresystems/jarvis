@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Jarvis.Views.ResultView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:behaviors="clr-namespace:Jarvis.Infrastructure.Presentation.Behaviors"
+             xmlns:core="clr-namespace:Jarvis.Core;assembly=Jarvis.Core"
+             xmlns:cal="http://www.caliburnproject.org"
+             xmlns:controls="clr-namespace:Jarvis.Infrastructure.Presentation.Controls"
+             xmlns:debug="debug-mode"
+             xmlns:componentModel="clr-namespace:System.ComponentModel;assembly=WindowsBase"
+             mc:Ignorable="d mc" 
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <CollectionViewSource x:Key="SortedResults" Source="{Binding Items}">
+            <CollectionViewSource.SortDescriptions>
+                <componentModel:SortDescription PropertyName="Type"/>
+                <componentModel:SortDescription PropertyName="Score"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
+    </UserControl.Resources>
+
+    <ListBox x:Name="Items" Height="Auto" MaxHeight="300" BorderThickness="0" SelectionMode="Single"
+             SelectedItem="{Binding Path=SelectedResult}"
+             SelectedIndex="{Binding Path=SelectedResultIndex}"
+             ItemsSource="{Binding Source={StaticResource SortedResults}}"
+             behaviors:ListBoxBehavior.ScrollSelectedIntoView="True" Margin="-1,0,1,0">
+
+        <ListBox.ItemTemplate>
+            <DataTemplate DataType="core:IQueryResult">
+                <Grid Margin="5" cal:Bind.Model="{Binding}" cal:Message.Attach="[Event MouseDown] = [Action OnItemClicked($dataContext)]">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="48"/>
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <controls:IconControl Grid.Column="0" Width="36" Height="36" HorizontalAlignment="Left" Result="{Binding BindsDirectlyToSource=True, IsAsync=True}" />
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="{Binding Title}" FontSize="18" TextWrapping="NoWrap" MaxWidth="450" ToolTip="{Binding Title}" />
+                        <TextBlock Text="{Binding Description}" FontStyle="Italic" TextWrapping="Wrap" MaxWidth="450" Foreground="#999999"/>
+                        <mc:AlternateContent>
+                            <mc:Choice Requires="debug">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Distance:" Margin="0,0,5,0" Foreground="#999999"/>
+                                    <TextBlock Text="{Binding Distance}" FontStyle="Italic" TextWrapping="Wrap" MaxWidth="450" Foreground="#999999"/>
+                                    <TextBlock Text=", Score:" Margin="0,0,5,0" Foreground="#999999"/>
+                                    <TextBlock Text="{Binding Score}" FontStyle="Italic" TextWrapping="Wrap" MaxWidth="450" Foreground="#999999"/>
+                                </StackPanel>
+                            </mc:Choice>
+                        </mc:AlternateContent>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ListBox.ItemTemplate>
+    </ListBox>
+</UserControl>

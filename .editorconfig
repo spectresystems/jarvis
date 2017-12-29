@@ -1,0 +1,12 @@
+root = true
+
+[*]
+end_of_line = CRLF
+
+[*.{cpp,h,inl}]
+indent_style = space
+indent_size = 4
+
+[*.cs]
+indent_style = space
+indent_size = 4

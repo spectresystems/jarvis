@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?if $(var.Platform) = "x64" ?>
+<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+<?define UpgradeCode = "5E35F534-95CF-449F-82EE-C735921B3BE3" ?>
+<?else ?>
+<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+<?define UpgradeCode = "B52C3774-8E0D-4FEA-9D70-83BF86D1C887" ?>
+<?endif ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Product Id="*" UpgradeCode="$(var.UpgradeCode)" Name="Jarvis" Manufacturer="Spectre Systems AB" Language="1033" Version="$(var.Version)">
+  
+        <Package Id="*" Description="Jarvis installer" Compressed="yes" InstallScope="perMachine" InstallerVersion="301" />
+        <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+  
+        <Media Id="1" Cabinet="Jarvis.cab" EmbedCab="yes" CompressionLevel="high" />
+
+        <InstallExecuteSequence>
+            <Custom Action="WixCloseApplications" Before="InstallInitialize" />
+        </InstallExecuteSequence>
+
+        <util:CloseApplication Id="CloseApp" RebootPrompt="no" Target="Jarvis.exe" />
+
+        <Icon Id="Jarvis.exe" SourceFile="$(var.PublishDirectory)\Jarvis.exe" />
+        <Property Id="ARPPRODUCTICON" Value="Jarvis.exe" />
+
+        <Directory Id="TARGETDIR" Name="SourceDir">
+            <Directory Id="$(var.PlatformProgramFilesFolder)">
+                <Directory Id="INSTALLDIR" Name="Jarvis"/>
+            </Directory>
+            <Directory Id="ProgramMenuFolder" />
+        </Directory>
+
+        <DirectoryRef Id="INSTALLDIR">
+            <Component Id="Jarvis.exe" Guid="3AE81239-6B49-4BE0-93CF-3BCF6C47AD63">
+                <File Id="Jarvis.exe" Source="$(var.PublishDirectory)\Jarvis.exe" KeyPath="yes" Checksum="yes">
+                    <Shortcut Id="StartmentShortcut" Directory="ProgramMenuFolder" Name="Jarvis" WorkingDirectory='INSTALLDIR' Icon="Jarvis.exe" IconIndex="0" Advertise="yes" />
+                </File>
+            </Component>
+            <Component Id="Autostart" Guid="7AC76000-CC39-48E6-BF4C-B5D76CF4143F">
+                <RegistryKey Root="HKCU" Key="Software\Microsoft\Windows\CurrentVersion\Run">
+                    <RegistryValue Name="Jarvis" Type="string" Value="[INSTALLDIR]Jarvis.exe" KeyPath="yes" Action="write" />
+                </RegistryKey>
+            </Component>
+            <Component Id="Jarvis.exe.config" Guid="23234D19-93E1-4B24-965A-E1DB8F372D7D">
+                <File Id="Jarvis.exe.config" Source="$(var.PublishDirectory)\Jarvis.exe.config" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Jarvis.Core.dll" Guid="9FBFC098-184A-4F85-B4AA-ADF53E448AFA">
+                <File Id="Jarvis.Core.dll" Source="$(var.PublishDirectory)\Jarvis.Core.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Jarvis.Addin.Files.dll" Guid="297F9705-DEEF-497A-8A58-72BF9CACEC91">
+                <File Id="Jarvis.Addin.Files.dll" Source="$(var.PublishDirectory)\Jarvis.Addin.Files.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Jarvis.Addin.Google.dll" Guid="C0680DBC-420F-4C09-82C1-8B70AE5C10BC">
+                <File Id="Jarvis.Addin.Google.dll" Source="$(var.PublishDirectory)\Jarvis.Addin.Google.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Jarvis.Addin.Wikipedia.dll" Guid="656B794D-AEBC-4644-B043-E54C35FB6875">
+                <File Id="Jarvis.Addin.Wikipedia.dll" Source="$(var.PublishDirectory)\Jarvis.Addin.Wikipedia.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Autofac.dll" Guid="DEEFB2C1-612A-418A-88BE-988B9ACCA317">
+                <File Id="Autofac.dll" Source="$(var.PublishDirectory)\Autofac.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Caliburn.Micro.dll" Guid="F77A2DC3-D57D-4650-8A30-B0A7AD1D71AB">
+                <File Id="Caliburn.Micro.dll" Source="$(var.PublishDirectory)\Caliburn.Micro.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Caliburn.Micro.Platform.Core.dll" Guid="744CC786-39FD-4C20-B3B3-EECBF797A3C4">
+                <File Id="Caliburn.Micro.Platform.Core.dll" Source="$(var.PublishDirectory)\Caliburn.Micro.Platform.Core.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Caliburn.Micro.Platform.dll" Guid="094D2927-9E6A-4F28-888F-AEF860FA6B16">
+                <File Id="Caliburn.Micro.Platform.dll" Source="$(var.PublishDirectory)\Caliburn.Micro.Platform.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Hardcodet.Wpf.TaskbarNotification.dll" Guid="88BE0509-F295-43D9-9421-BA9C7A4B0101">
+                <File Id="Hardcodet.Wpf.TaskbarNotification.dll" Source="$(var.PublishDirectory)\Hardcodet.Wpf.TaskbarNotification.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Newtonsoft.Json.dll" Guid="C5B7D5F0-779A-4E22-907B-6847FDF8D174">
+                <File Id="Newtonsoft.Json.dll" Source="$(var.PublishDirectory)\Newtonsoft.Json.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Microsoft.Threading.Tasks.dll" Guid="296C87C4-483D-49D9-9F6B-8BB83E67E753">
+                <File Id="Microsoft.Threading.Tasks.dll" Source="$(var.PublishDirectory)\Microsoft.Threading.Tasks.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Microsoft.Threading.Tasks.Extensions.Desktop.dll" Guid="4A8AB9F6-DAB2-45E4-BC22-6D2F4BEE8DAD">
+                <File Id="Microsoft.Threading.Tasks.Extensions.Desktop.dll" Source="$(var.PublishDirectory)\Microsoft.Threading.Tasks.Extensions.Desktop.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Microsoft.Threading.Tasks.Extensions.dll" Guid="8475143C-877E-4DF5-8D50-B6276817C1DB">
+                <File Id="Microsoft.Threading.Tasks.Extensions.dll" Source="$(var.PublishDirectory)\Microsoft.Threading.Tasks.Extensions.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Nito.AsyncEx.dll" Guid="B27845EE-56BF-4463-A95C-1C91D95FC163">
+                <File Id="Nito.AsyncEx.dll" Source="$(var.PublishDirectory)\Nito.AsyncEx.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Nito.AsyncEx.Enlightenment.dll" Guid="9305DC51-2DA3-418C-9FF6-3C469E80C868">
+                <File Id="Nito.AsyncEx.Enlightenment.dll" Source="$(var.PublishDirectory)\Nito.AsyncEx.Enlightenment.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Serilog.dll" Guid="AB8EA697-03B4-46D6-ADCC-9B4FA51B4E6E">
+                <File Id="Serilog.dll" Source="$(var.PublishDirectory)\Serilog.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Serilog.Sinks.File.dll" Guid="924C1812-5A30-4D5E-A6E2-A391E90498D7">
+                <File Id="Serilog.Sinks.File.dll" Source="$(var.PublishDirectory)\Serilog.Sinks.File.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="Spectre.System.dll" Guid="D5453D4E-F9F0-476C-9F19-B8687D375494">
+                <File Id="Spectre.System.dll" Source="$(var.PublishDirectory)\Spectre.System.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+            <Component Id="System.Windows.Interactivity.dll" Guid="72A26ECD-96FB-4E8A-AC64-A0F5EE1F4DED">
+                <File Id="System.Windows.Interactivity.dll" Source="$(var.PublishDirectory)\System.Windows.Interactivity.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <Feature Id="MainApplication" Level="1" Absent="disallow">
+            <ComponentRef Id="Jarvis.exe" />
+            <ComponentRef Id="Autostart" />
+            <ComponentRef Id="Jarvis.exe.config" />
+            <ComponentRef Id="Jarvis.Core.dll" />
+            <ComponentRef Id="Jarvis.Addin.Files.dll" />
+            <ComponentRef Id="Jarvis.Addin.Google.dll" />
+            <ComponentRef Id="Jarvis.Addin.Wikipedia.dll" />
+            <ComponentRef Id="Autofac.dll" />
+            <ComponentRef Id="Caliburn.Micro.dll" />
+            <ComponentRef Id="Caliburn.Micro.Platform.Core.dll" />
+            <ComponentRef Id="Caliburn.Micro.Platform.dll" />
+            <ComponentRef Id="Hardcodet.Wpf.TaskbarNotification.dll" />
+            <ComponentRef Id="Newtonsoft.Json.dll" />
+            <ComponentRef Id="Microsoft.Threading.Tasks.dll" />
+            <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.Desktop.dll" />
+            <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.dll" />
+            <ComponentRef Id="Nito.AsyncEx.dll" />
+            <ComponentRef Id="Nito.AsyncEx.Enlightenment.dll" />
+            <ComponentRef Id="Serilog.dll" />
+            <ComponentRef Id="Serilog.Sinks.File.dll" />
+            <ComponentRef Id="Spectre.System.dll" />
+            <ComponentRef Id="System.Windows.Interactivity.dll" />
+        </Feature>
+    </Product>
+</Wix>

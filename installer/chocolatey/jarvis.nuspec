@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>jarvis</id>
+    <title>Jarvis</title>
+    <authors>Patrik Svensson</authors>
+    <owners>Spectre Systems AB</owners>
+    <summary>Your robotic butler.</summary>
+    <description>Your robotic butler.</description>
+    <projectUrl>https://github.com/spectresystems/jarvis</projectUrl>
+    <packageSourceUrl>https://github.com/spectresystems/jarvis</packageSourceUrl>
+    <projectSourceUrl>https://github.com/spectresystems/jarvis</projectSourceUrl>
+    <bugTrackerUrl>https://github.com/spectresystems/jarvis/issues</bugTrackerUrl>
+    <tags>jarvis launcher</tags>
+    <copyright>Copyright 2017 Spectre Systems AB</copyright>
+    <licenseUrl>https://raw.githubusercontent.com/spectresystems/jarvis/master/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <iconUrl>https://raw.githubusercontent.com/spectresystems/jarvis/develop/res/gfx/jarvis.ico</iconUrl>
+    <releaseNotes>https://github.com/spectresystems/jarvis/releases/tag/v$version$</releaseNotes>
+  </metadata>
+  <files>
+    <file src="chocolateyinstall.ps1" target="tools" />
+    <file src="chocolateyuninstall.ps1" target="tools" />
+  </files>
+</package>
