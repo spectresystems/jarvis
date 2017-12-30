@@ -1,0 +1,26 @@
+# Build script
+init:
+  - git config --global core.autocrlf true
+
+# Build script
+build_script:
+  - ps: .\build.ps1
+
+# Tests
+test: off
+
+# Branches to build
+branches:
+  # Whitelist
+  only:
+    - develop
+    - master
+    - /r/.*/
+    - /release/.*/
+    - /hotfix/.*/
+    - /feature/.*/
+
+# Build cache
+cache:
+- tools -> build.cake
+- packages -> build.cake
