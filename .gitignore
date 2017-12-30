@@ -14,16 +14,14 @@
 installer/chocolatey/chocolateyinstall.ps1
 
 # Cake
-tools/Cake/
+tools/Cake.*/
 tools/Cake.CoreCLR/
 tools/Cake.Bakery/
-tools/xunit.runners/
-tools/xunit.runner.console/
 tools/nuget.exe
 tools/gitversion.commandline*
-tools/wix.3.11.0/
-tools/chocolatey.0.10.8/
-tools/xunit.runner.console.2.3.1/
+tools/wix.*/
+tools/chocolatey.*/
+tools/xunit.runner.console.*/
 tools/Addins/
 tools/packages.config.md5sum
 
