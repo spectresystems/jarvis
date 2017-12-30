@@ -2,7 +2,7 @@
 
 Jarvis is an [Alfred](https://www.alfredapp.com/) alternative for Windows 10.
 
-Jarvis is currently under development, and all features are not there yet. Pull requests are currently only accepted for things like performance/memory optimizations and bugs at the moment until everything's more stabile. If there's a feature that you would like to see in Jarvis, then please submit an [issue](https://github.com/spectresystems/jarvis/issues).
+Jarvis is currently under development, and all features are not there yet. Pull requests are currently only accepted for things like performance/memory optimizations and bugs at the moment until everything's more stable. If there's a feature that you would like to see in Jarvis, then please submit an [issue](https://github.com/spectresystems/jarvis/issues).
 
 ![Test](/docs/images/jarvis.gif)
 
