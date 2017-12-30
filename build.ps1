@@ -1,12 +1,20 @@
 $ENV:CAKE_NUGET_USEINPROCESSCLIENT='true'
+$ToolPath = Join-Path $PSScriptRoot "tools"
+$NugetPath = Join-Path $ToolPath "nuget.exe"
+$NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
 $CakeVersion = "0.24.0"
 
 # Make sure tools folder exists
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
-$ToolPath = Join-Path $PSScriptRoot "tools"
 if (!(Test-Path $ToolPath)) {
     Write-Verbose "Creating tools directory..."
     New-Item -Path $ToolPath -Type directory | out-null
+}
+
+# Try download NuGet.exe if not exists
+if (!(Test-Path $NugetPath)) {
+    Write-Verbose -Message "Downloading NuGet.exe..."
+    (New-Object System.Net.WebClient).DownloadFile($NugetUrl, $NugetPath)
 }
 
 ###########################################################################
