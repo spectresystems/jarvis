@@ -36,12 +36,12 @@ namespace Jarvis.Addin.Wikipedia
             _icon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.Wikipedia;component/Resources/Wikipedia.png"));
         }
 
-        protected override Task<ImageSource> GetIcon(WikipediaResult result)
+        protected override Task<ImageSource> GetIconAsync(WikipediaResult result)
         {
             return Task.FromResult(_icon);
         }
 
-        public override async Task<IEnumerable<IQueryResult>> Query(Query query, bool fallback)
+        public override async Task<IEnumerable<IQueryResult>> QueryAsync(Query query)
         {
             Ensure.NotNull(query, nameof(query));
 
@@ -53,17 +53,6 @@ namespace Jarvis.Addin.Wikipedia
                     (IQueryResult)new WikipediaResult(
                     uri, "Open Wikipedia in browser",
                     uri.AbsoluteUri, 0, 0)
-                };
-            }
-
-            if (fallback)
-            {
-                var uri = new Uri($"https://en.wikipedia.org/wiki/{Encode(query.Argument)}");
-                return new[]
-                {
-                    (IQueryResult)new WikipediaResult(
-                        uri, $"Search Wikipedia for '{query.Argument}'",
-                        uri.AbsoluteUri, 0, 0)
                 };
             }
 
@@ -79,10 +68,25 @@ namespace Jarvis.Addin.Wikipedia
                     var keywords = JArray.Parse(data)[1].Where(x => x.Type == JTokenType.String).Select(x => x.Value<string>());
                     var uris = JArray.Parse(data)[3].Where(x => x.Type == JTokenType.String).Select(x => new Uri(x.Value<string>()));
 
-                    return keywords.Zip(uris, (title, url) =>
-                        (IQueryResult)new WikipediaResult(url, title, url.AbsoluteUri,
-                        LevenshteinScorer.Score(title, query.Argument, false),
-                        LevenshteinScorer.Score(title, query.Argument)));
+                    var results = keywords
+                        .Zip(uris, (title, url) =>
+                            (IQueryResult)new WikipediaResult(url, title, url.AbsoluteUri,
+                                LevenshteinScorer.Score(title, query.Argument, false),
+                                LevenshteinScorer.Score(title, query.Argument)))
+                        .ToList();
+
+                    if (!results.Any())
+                    {
+                        var fallbackUrl = new Uri($"https://en.wikipedia.org/wiki/{Encode(query.Argument)}");
+                        return new[]
+                        {
+                            (IQueryResult)new WikipediaResult(
+                                fallbackUrl, $"Search Wikipedia for '{query.Argument}'",
+                                fallbackUrl.AbsoluteUri, 0, 0)
+                        };
+                    }
+
+                    return results;
                 }
             }
             catch (Exception e)
@@ -90,10 +94,10 @@ namespace Jarvis.Addin.Wikipedia
                 _log.Error(e, "An error occured while querying Wikipedia.");
             }
 
-            return null;
+            return Enumerable.Empty<IQueryResult>();
         }
 
-        protected override Task Execute(WikipediaResult result)
+        protected override Task ExecuteAsync(WikipediaResult result)
         {
             Process.Start(result.Uri.AbsoluteUri);
             return Task.CompletedTask;

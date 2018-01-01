@@ -36,12 +36,12 @@ namespace Jarvis.Addin.Google
             _linkIcon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.Google;component/Resources/Link.png"));
         }
 
-        protected override Task<ImageSource> GetIcon(GoogleResult result)
+        protected override Task<ImageSource> GetIconAsync(GoogleResult result)
         {
             return Task.FromResult(result.IsGoogleQuery ? _googleIcon : _linkIcon);
         }
 
-        public override async Task<IEnumerable<IQueryResult>> Query(Query query, bool fallback)
+        public override async Task<IEnumerable<IQueryResult>> QueryAsync(Query query)
         {
             Ensure.NotNull(query, nameof(query));
 
@@ -56,11 +56,6 @@ namespace Jarvis.Addin.Google
                 };
             }
 
-            if (fallback)
-            {
-                return new[] { GoogleResult.Create(query, description: $"Search Google for '{query.Argument}'") };
-            }
-
             try
             {
                 var uri = $"https://www.google.com/complete/search?output=chrome&q={WebUtility.UrlEncode(query.Argument)}";
@@ -69,8 +64,13 @@ namespace Jarvis.Addin.Google
                 if (result.IsSuccessStatusCode)
                 {
                     var data = await result.Content.ReadAsStringAsync();
-                    var queryResults = JArray.Parse(data)[1].Where(x => x.Type == JTokenType.String).Select(x => x.Value<string>());
-                    return queryResults.Select(x => GoogleResult.Create(query, x));
+                    var queryResults = JArray.Parse(data)[1]
+                        .Where(x => x.Type == JTokenType.String).Select(x => x.Value<string>())
+                        .ToList();
+
+                    return queryResults.Any()
+                        ? queryResults.Select(x => GoogleResult.Create(query, x))
+                        : new[] { GoogleResult.Create(query, description: $"Search Google for '{query.Argument}'") };
                 }
             }
             catch (Exception e)
@@ -78,10 +78,10 @@ namespace Jarvis.Addin.Google
                 _log.Error(e, "An error occured while querying Google.");
             }
 
-            return null;
+            return Enumerable.Empty<IQueryResult>();
         }
 
-        protected override Task Execute(GoogleResult result)
+        protected override Task ExecuteAsync(GoogleResult result)
         {
             Process.Start(result.Uri.AbsoluteUri);
             return Task.CompletedTask;
