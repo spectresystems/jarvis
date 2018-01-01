@@ -31,7 +31,7 @@ namespace Jarvis.Bootstrapping
         protected override void Load(ContainerBuilder builder)
         {
             // Caliburn.Micro
-            builder.RegisterType<JarvisWindowManager>().As<IWindowManager>().As<JarvisWindowManager>().InstancePerLifetimeScope();
+            builder.RegisterType<WindowService>().As<IWindowManager>().As<WindowService>().InstancePerLifetimeScope();
             builder.RegisterType<EventAggregator>().As<IEventAggregator>().InstancePerLifetimeScope();
 
             // Core
@@ -54,7 +54,8 @@ namespace Jarvis.Bootstrapping
             // Services
             builder.RegisterType<QueryProviderService>().SingleInstance();
             builder.RegisterType<ApplicationService>().SingleInstance();
-            builder.RegisterType<JarvisWindowManager>().SingleInstance();
+            builder.RegisterType<WindowService>().SingleInstance();
+            builder.RegisterType<SettingsService>().AsSelf().AsImplementedInterfaces().SingleInstance();
 
             // Misc
             builder.RegisterType<JarvisTaskbarIcon>().SingleInstance();

@@ -18,7 +18,7 @@ namespace Jarvis.ViewModels
     public sealed class ShellViewModel : Screen, IHandle<UpdateAvailableMessage>, IHandle<ExitMessage>
     {
         private readonly ApplicationService _application;
-        private readonly JarvisWindowManager _windowManager;
+        private readonly WindowService _windowManager;
 
         [UsedImplicitly]
         public string QueryString { get; set; }
@@ -31,7 +31,7 @@ namespace Jarvis.ViewModels
 
         public ShellViewModel(
             ResultViewModel resultViewModel, ApplicationService application,
-            JarvisWindowManager windowManager, IEventAggregator inbox)
+            WindowService windowManager, IEventAggregator inbox)
         {
             _application = application;
             _windowManager = windowManager;

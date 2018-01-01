@@ -111,6 +111,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">
       <DependentUpon>IconControl.xaml</DependentUpon>
@@ -144,9 +145,10 @@
     </Compile>
     <Compile Include="Services\ApplicationService.cs" />
     <Compile Include="Services\JarvisTaskbarIcon.cs" />
-    <Compile Include="Services\JarvisWindowManager.cs" />
+    <Compile Include="Services\WindowService.cs" />
     <Compile Include="Services\QueryProviderService.cs" />
     <Compile Include="Services\ServiceOrchestrator.cs" />
+    <Compile Include="Services\SettingsService.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="Services\Updating\FakeUpdateChecker.cs" />
     <Compile Include="Services\Updating\GitHubReleases.cs" />
@@ -154,7 +156,9 @@
     <Compile Include="Services\Updating\JarvisUpdateInfo.cs" />
     <Compile Include="Services\Updating\UpdateChecker.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\Settings\GeneralSettingsViewModel.cs" />
     <Compile Include="ViewModels\ResultViewModel.cs" />
+    <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\TaskbarIconViewModel.cs" />
     <Compile Include="ViewModels\UpdateViewModel.cs" />
@@ -187,7 +191,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Settings\GeneralSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ResultView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
