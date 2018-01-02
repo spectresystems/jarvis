@@ -42,71 +42,74 @@ namespace Jarvis.Addin.Files.Indexing
             _entryComparer = new IndexedEntryComparer();
         }
 
-        public async Task<bool> Run(CancellationToken token)
+        public Task<bool> Run(CancellationToken token)
         {
-            while (true)
+            return Task.Run(() =>
             {
-                var st = new Stopwatch();
-                st.Start();
-
-                var result = LoadResults(token);
-
-                if (token.IsCancellationRequested)
+                while (true)
                 {
-                    break;
-                }
+                    var st = new Stopwatch();
+                    st.Start();
 
-                _log.Debug("Updating index...");
-                var st2 = new Stopwatch();
-                st2.Start();
+                    var result = LoadResults(token);
 
-                var trie = new Trie<IndexedEntry>();
-                foreach (var file in result)
-                {
-                    // Index individual words as well as combinations.
-                    Index(trie, file.Title, file);
-                    Index(trie, file.Description, file);
-
-                    // Also index the whole words without tokenization.
-                    trie.Insert(file.Title, file);
-
-                    // Is this a file path?
-                    if (file is IHasPath entryWithPath)
+                    if (token.IsCancellationRequested)
                     {
-                        if (entryWithPath.Path is FilePath filePath)
-                        {
-                            // Index individual words as well as combinations.
-                            Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file);
-                            Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file);
+                        break;
+                    }
 
-                            // Also index the whole words without tokenization.
-                            trie.Insert(filePath.GetFilenameWithoutExtension().FullPath, file);
-                            trie.Insert(filePath.GetFilename().FullPath, file);
+                    _log.Debug("Updating index...");
+                    var st2 = new Stopwatch();
+                    st2.Start();
+
+                    var trie = new Trie<IndexedEntry>();
+                    foreach (var file in result)
+                    {
+                        // Index individual words as well as combinations.
+                        Index(trie, file.Title, file);
+                        Index(trie, file.Description, file);
+
+                        // Also index the whole words without tokenization.
+                        trie.Insert(file.Title, file);
+
+                        // Is this a file path?
+                        if (file is IHasPath entryWithPath)
+                        {
+                            if (entryWithPath.Path is FilePath filePath)
+                            {
+                                // Index individual words as well as combinations.
+                                Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file);
+                                Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file);
+
+                                // Also index the whole words without tokenization.
+                                trie.Insert(filePath.GetFilenameWithoutExtension().FullPath, file);
+                                trie.Insert(filePath.GetFilename().FullPath, file);
+                            }
                         }
+                    }
+
+                    st2.Stop();
+                    _log.Debug($"Building trie took {st2.ElapsedMilliseconds}ms");
+
+                    _log.Debug("Writing index...");
+                    Interlocked.Exchange(ref _trie, trie);
+
+                    _log.Verbose($"Nodes: {_trie.NodeCount}");
+                    _log.Verbose($"Items: {_trie.ItemCount}");
+
+                    // Wait for a minute.
+                    st.Stop();
+                    _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
+
+                    if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
+                    {
+                        _log.Information("We were instructed to stop (2).");
+                        break;
                     }
                 }
 
-                st2.Stop();
-                _log.Debug($"Building trie took {st2.ElapsedMilliseconds}ms");
-
-                _log.Debug("Writing index...");
-                Interlocked.Exchange(ref _trie, trie);
-
-                _log.Verbose($"Nodes: {_trie.NodeCount}");
-                _log.Verbose($"Items: {_trie.ItemCount}");
-
-                // Wait for a minute.
-                st.Stop();
-                _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
-
-                if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
-                {
-                    _log.Information("We were instructed to stop (2).");
-                    break;
-                }
-            }
-
-            return true;
+                return true;
+            });
         }
 
         private List<IndexedEntry> LoadResults(CancellationToken token)
