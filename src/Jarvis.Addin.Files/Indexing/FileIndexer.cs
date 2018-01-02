@@ -53,7 +53,7 @@ namespace Jarvis.Addin.Files.Indexing
                 var result = new HashSet<IndexedEntry>();
                 foreach (var source in _sources)
                 {
-                    if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(0).TotalMilliseconds))
+                    if (token.IsCancellationRequested)
                     {
                         _log.Information("We were instructed to stop (1). Aborting indexing...");
                         break;
