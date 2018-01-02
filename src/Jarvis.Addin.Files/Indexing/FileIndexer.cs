@@ -50,20 +50,28 @@ namespace Jarvis.Addin.Files.Indexing
                 st.Start();
 
                 // Ask all sources for files.
-                var result = new HashSet<IndexedEntry>();
-                foreach (var source in _sources)
-                {
-                    if (token.IsCancellationRequested)
+                var result = _sources.AsParallel()
+                    .SelectMany(src =>
                     {
-                        _log.Information("We were instructed to stop (1). Aborting indexing...");
-                        break;
-                    }
+                        if (token.IsCancellationRequested)
+                        {
+                            _log.Information("We were instructed to stop (1). Aborting indexing...");
+                            return Enumerable.Empty<IndexedEntry>();
+                        }
 
-                    _log.Debug($"Running '{source.Name}' indexer...");
-                    foreach (var file in source.Index())
+                        _log.Debug($"Running '{src.Name}' indexer...");
+                        return src.Index();
+                    })
+                    .Aggregate(new HashSet<IndexedEntry>(), (acc, x) =>
                     {
-                        result.Add(file);
-                    }
+                        acc.Add(x);
+                        return acc;
+                    });
+
+
+                if (token.IsCancellationRequested)
+                {
+                    break;
                 }
 
                 _log.Debug("Updating index...");
