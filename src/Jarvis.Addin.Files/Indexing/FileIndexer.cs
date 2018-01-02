@@ -25,7 +25,6 @@ namespace Jarvis.Addin.Files.Indexing
     {
         private readonly IJarvisLog _log;
         private readonly List<IFileIndexSource> _sources;
-        private readonly AsyncReaderWriterLock _lock;
         private readonly HashSet<string> _stopWords;
         private readonly ScoreComparer _comparer;
         private readonly IndexedEntryComparer _entryComparer;
@@ -38,7 +37,6 @@ namespace Jarvis.Addin.Files.Indexing
         {
             _log = new LogDecorator("FileIndexer", log);
             _sources = new List<IFileIndexSource>(sources ?? Array.Empty<IFileIndexSource>());
-            _lock = new AsyncReaderWriterLock();
             _stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "to", "the" };
             _comparer = new ScoreComparer();
             _entryComparer = new IndexedEntryComparer();
@@ -96,10 +94,7 @@ namespace Jarvis.Addin.Files.Indexing
                 }
 
                 _log.Debug("Writing index...");
-                using (await _lock.WriterLockAsync(token))
-                {
-                    _trie = trie;
-                }
+                Interlocked.Exchange(ref _trie, trie);
 
                 _log.Verbose($"Nodes: {_trie.NodeCount}");
                 _log.Verbose($"Items: {_trie.ItemCount}");
@@ -107,6 +102,7 @@ namespace Jarvis.Addin.Files.Indexing
                 // Wait for a minute.
                 st.Stop();
                 _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
+
                 if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
                 {
                     _log.Information("We were instructed to stop (2).");
@@ -137,26 +133,24 @@ namespace Jarvis.Addin.Files.Indexing
 
         public async Task<IEnumerable<IQueryResult>> Find(string query, CancellationToken token)
         {
-            using (await _lock.ReaderLockAsync(token))
+            var trie = _trie;
+            if (trie == null)
             {
-                if (_trie == null)
-                {
-                    return Enumerable.Empty<IQueryResult>();
-                }
-
-                // Get all matches.
-                var result = await _trie.Find(query);
-                result = result.Concat(await _trie.Find(query, 1));
-
-                return new HashSet<IQueryResult>(
-                    result.SelectMany(x => x.Data)
-                        .Distinct(_entryComparer)
-                        .Select(entry => entry.GetFileResult(query,
-                            CalculateDistance(entry, query),
-                            CalculateScore(entry, query))))
-                    .OrderBy(fileResult => fileResult.Type)
-                    .ThenBy(item => item, _comparer);
+                return Enumerable.Empty<IQueryResult>();
             }
+
+            // Get all matches.
+            var result = await trie.Find(query);
+            result = result.Concat(await trie.Find(query, 1));
+
+            return new HashSet<IQueryResult>(
+                result.SelectMany(x => x.Data)
+                    .Distinct(_entryComparer)
+                    .Select(entry => entry.GetFileResult(query,
+                        CalculateDistance(entry, query),
+                        CalculateScore(entry, query))))
+                .OrderBy(fileResult => fileResult.Type)
+                .ThenBy(item => item, _comparer);
         }
 
         private static float CalculateDistance(IndexedEntry entry, string query)
