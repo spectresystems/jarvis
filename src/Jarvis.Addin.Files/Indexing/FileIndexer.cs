@@ -4,9 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Jarvis.Addin.Files.Collections;
 using Jarvis.Core;
 using Jarvis.Core.Diagnostics;
@@ -46,6 +48,9 @@ namespace Jarvis.Addin.Files.Indexing
         {
             while (true)
             {
+                var st = new Stopwatch();
+                st.Start();
+
                 // Ask all sources for files.
                 var result = new HashSet<IndexedEntry>();
                 foreach (var source in _sources)
@@ -100,7 +105,8 @@ namespace Jarvis.Addin.Files.Indexing
                 _log.Verbose($"Items: {_trie.ItemCount}");
 
                 // Wait for a minute.
-                _log.Debug("Indexing done.");
+                st.Stop();
+                _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
                 if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
                 {
                     _log.Information("We were instructed to stop (2).");
