@@ -15,19 +15,19 @@ namespace Jarvis.Core
         public virtual string Command => null;
         Type IQueryProvider.QueryType => typeof(T);
 
-        Task<ImageSource> IQueryProvider.GetIcon(IQueryResult result)
+        Task<ImageSource> IQueryProvider.GetIconAsync(IQueryResult result)
         {
-            return GetIcon((T)result);
+            return GetIconAsync((T)result);
         }
 
-        Task IQueryProvider.Execute(IQueryResult result)
+        Task IQueryProvider.ExecuteAsync(IQueryResult result)
         {
-            return Execute((T)result);
+            return ExecuteAsync((T)result);
         }
 
-        protected abstract Task<ImageSource> GetIcon(T result);
-        protected abstract Task Execute(T result);
+        protected abstract Task<ImageSource> GetIconAsync(T result);
+        protected abstract Task ExecuteAsync(T result);
 
-        public abstract Task<IEnumerable<IQueryResult>> Query(Query query, bool fallback);
+        public abstract Task<IEnumerable<IQueryResult>> QueryAsync(Query query);
     }
 }

@@ -33,21 +33,21 @@ namespace Jarvis.Addin.Files
             _loader = loader;
         }
 
-        protected override async Task<ImageSource> GetIcon(FileResult result)
+        protected override async Task<ImageSource> GetIconAsync(FileResult result)
         {
             return await _loader.LoadAsync(result);
         }
 
-        public override async Task<IEnumerable<IQueryResult>> Query(Query query, bool fallback)
+        public override async Task<IEnumerable<IQueryResult>> QueryAsync(Query query)
         {
-            if (query.Raw?.Length <= 1 || fallback)
+            if (query.Raw?.Length <= 1)
             {
                 return Enumerable.Empty<IQueryResult>();
             }
             return await _index.Find(query.Raw?.Trim(), CancellationToken.None).ConfigureAwait(false);
         }
 
-        protected override Task Execute(FileResult result)
+        protected override Task ExecuteAsync(FileResult result)
         {
             if (result.Path != null)
             {

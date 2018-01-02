@@ -30,7 +30,7 @@ namespace Jarvis.Services
         {
             if (_providers.TryGetValue(result.GetType(), out var provider))
             {
-                return await provider.GetIcon(result);
+                return await provider.GetIconAsync(result);
             }
             return null;
         }
@@ -41,11 +41,7 @@ namespace Jarvis.Services
             var providers = GetProviders(query);
             var tasks = providers.Select(async provider =>
             {
-                var result = (await provider.Query(query, false)).ToArray();
-                if (result.Length == 0)
-                {
-                    result = (await provider.Query(query, true)).ToArray();
-                }
+                var result = (await provider.QueryAsync(query)).ToArray();
 
                 // Remove items.
                 for (var i = target.Count - 1; i >= 0; i--)
@@ -83,7 +79,7 @@ namespace Jarvis.Services
         {
             if (_providers.TryGetValue(result.GetType(), out var provider))
             {
-                await provider.Execute(result);
+                await provider.ExecuteAsync(result);
             }
         }
 
