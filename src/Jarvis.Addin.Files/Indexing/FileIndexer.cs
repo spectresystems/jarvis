@@ -49,25 +49,7 @@ namespace Jarvis.Addin.Files.Indexing
                 var st = new Stopwatch();
                 st.Start();
 
-                // Ask all sources for files.
-                var result = _sources.AsParallel()
-                    .SelectMany(src =>
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            _log.Information("We were instructed to stop (1). Aborting indexing...");
-                            return Enumerable.Empty<IndexedEntry>();
-                        }
-
-                        _log.Debug($"Running '{src.Name}' indexer...");
-                        return src.Index();
-                    })
-                    .Aggregate(new HashSet<IndexedEntry>(), (acc, x) =>
-                    {
-                        acc.Add(x);
-                        return acc;
-                    });
-
+                var result = LoadResults(token);
 
                 if (token.IsCancellationRequested)
                 {
@@ -75,6 +57,9 @@ namespace Jarvis.Addin.Files.Indexing
                 }
 
                 _log.Debug("Updating index...");
+                var st2 = new Stopwatch();
+                st2.Start();
+
                 var trie = new Trie<IndexedEntry>();
                 foreach (var file in result)
                 {
@@ -101,6 +86,9 @@ namespace Jarvis.Addin.Files.Indexing
                     }
                 }
 
+                st2.Stop();
+                _log.Debug($"Building trie took {st2.ElapsedMilliseconds}ms");
+
                 _log.Debug("Writing index...");
                 Interlocked.Exchange(ref _trie, trie);
 
@@ -119,6 +107,24 @@ namespace Jarvis.Addin.Files.Indexing
             }
 
             return true;
+        }
+
+        private List<IndexedEntry> LoadResults(CancellationToken token)
+        {
+            // Ask all sources for files.
+            return _sources.AsParallel()
+                .SelectMany(src =>
+                {
+                    if (token.IsCancellationRequested)
+                    {
+                        _log.Information("We were instructed to stop (1). Aborting indexing...");
+                        return Enumerable.Empty<IndexedEntry>();
+                    }
+
+                    _log.Debug($"Running '{src.Name}' indexer...");
+                    return src.Index();
+                })
+                .ToList();
         }
 
         private void Index(Trie<IndexedEntry> trie, string word, IndexedEntry entry)
