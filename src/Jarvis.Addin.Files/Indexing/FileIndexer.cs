@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,7 +14,6 @@ using Jarvis.Core.Diagnostics;
 using Jarvis.Core.Scoring;
 using Jarvis.Core.Threading;
 using JetBrains.Annotations;
-using Nito.AsyncEx;
 using Spectre.System.IO;
 
 namespace Jarvis.Addin.Files.Indexing
@@ -23,7 +23,6 @@ namespace Jarvis.Addin.Files.Indexing
     {
         private readonly IJarvisLog _log;
         private readonly List<IFileIndexSource> _sources;
-        private readonly AsyncReaderWriterLock _lock;
         private readonly HashSet<string> _stopWords;
         private readonly ScoreComparer _comparer;
         private readonly IndexedEntryComparer _entryComparer;
@@ -36,79 +35,97 @@ namespace Jarvis.Addin.Files.Indexing
         {
             _log = new LogDecorator("FileIndexer", log);
             _sources = new List<IFileIndexSource>(sources ?? Array.Empty<IFileIndexSource>());
-            _lock = new AsyncReaderWriterLock();
             _stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "to", "the" };
             _comparer = new ScoreComparer();
             _entryComparer = new IndexedEntryComparer();
         }
 
-        public async Task<bool> Run(CancellationToken token)
+        public Task<bool> Run(CancellationToken token)
         {
-            while (true)
+            return Task.Run(() =>
             {
-                // Ask all sources for files.
-                var result = new HashSet<IndexedEntry>();
-                foreach (var source in _sources)
+                while (true)
                 {
-                    if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(0).TotalMilliseconds))
+                    var st = new Stopwatch();
+                    st.Start();
+
+                    var result = LoadResults(token);
+
+                    if (token.IsCancellationRequested)
                     {
-                        _log.Information("We were instructed to stop (1). Aborting indexing...");
                         break;
                     }
 
-                    _log.Debug($"Running '{source.Name}' indexer...");
-                    foreach (var file in source.Index())
+                    _log.Debug("Updating index...");
+                    var st2 = new Stopwatch();
+                    st2.Start();
+
+                    var trie = new Trie<IndexedEntry>();
+                    foreach (var file in result)
                     {
-                        result.Add(file);
-                    }
-                }
+                        // Index individual words as well as combinations.
+                        Index(trie, file.Title, file);
+                        Index(trie, file.Description, file);
 
-                _log.Debug("Updating index...");
-                var trie = new Trie<IndexedEntry>();
-                foreach (var file in result)
-                {
-                    // Index individual words as well as combinations.
-                    Index(trie, file.Title, file);
-                    Index(trie, file.Description, file);
+                        // Also index the whole words without tokenization.
+                        trie.Insert(file.Title, file);
 
-                    // Also index the whole words without tokenization.
-                    trie.Insert(file.Title, file);
-
-                    // Is this a file path?
-                    if (file is IHasPath entryWithPath)
-                    {
-                        if (entryWithPath.Path is FilePath filePath)
+                        // Is this a file path?
+                        if (file is IHasPath entryWithPath)
                         {
-                            // Index individual words as well as combinations.
-                            Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file);
-                            Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file);
+                            if (entryWithPath.Path is FilePath filePath)
+                            {
+                                // Index individual words as well as combinations.
+                                Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file);
+                                Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file);
 
-                            // Also index the whole words without tokenization.
-                            trie.Insert(filePath.GetFilenameWithoutExtension().FullPath, file);
-                            trie.Insert(filePath.GetFilename().FullPath, file);
+                                // Also index the whole words without tokenization.
+                                trie.Insert(filePath.GetFilenameWithoutExtension().FullPath, file);
+                                trie.Insert(filePath.GetFilename().FullPath, file);
+                            }
                         }
                     }
+
+                    st2.Stop();
+                    _log.Debug($"Building trie took {st2.ElapsedMilliseconds}ms");
+
+                    _log.Debug("Writing index...");
+                    Interlocked.Exchange(ref _trie, trie);
+
+                    _log.Verbose($"Nodes: {_trie.NodeCount}");
+                    _log.Verbose($"Items: {_trie.ItemCount}");
+
+                    // Wait for a minute.
+                    st.Stop();
+                    _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
+
+                    if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
+                    {
+                        _log.Information("We were instructed to stop (2).");
+                        break;
+                    }
                 }
 
-                _log.Debug("Writing index...");
-                using (await _lock.WriterLockAsync(token))
+                return true;
+            });
+        }
+
+        private List<IndexedEntry> LoadResults(CancellationToken token)
+        {
+            // Ask all sources for files.
+            return _sources.AsParallel()
+                .SelectMany(src =>
                 {
-                    _trie = trie;
-                }
+                    if (token.IsCancellationRequested)
+                    {
+                        _log.Information("We were instructed to stop (1). Aborting indexing...");
+                        return Enumerable.Empty<IndexedEntry>();
+                    }
 
-                _log.Verbose($"Nodes: {_trie.NodeCount}");
-                _log.Verbose($"Items: {_trie.ItemCount}");
-
-                // Wait for a minute.
-                _log.Debug("Indexing done.");
-                if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
-                {
-                    _log.Information("We were instructed to stop (2).");
-                    break;
-                }
-            }
-
-            return true;
+                    _log.Debug($"Running '{src.Name}' indexer...");
+                    return src.Index();
+                })
+                .ToList();
         }
 
         private void Index(Trie<IndexedEntry> trie, string word, IndexedEntry entry)
@@ -131,26 +148,24 @@ namespace Jarvis.Addin.Files.Indexing
 
         public async Task<IEnumerable<IQueryResult>> Find(string query, CancellationToken token)
         {
-            using (await _lock.ReaderLockAsync(token))
+            var trie = _trie;
+            if (trie == null)
             {
-                if (_trie == null)
-                {
-                    return Enumerable.Empty<IQueryResult>();
-                }
-
-                // Get all matches.
-                var result = await _trie.Find(query);
-                result = result.Concat(await _trie.Find(query, 1));
-
-                return new HashSet<IQueryResult>(
-                    result.SelectMany(x => x.Data)
-                        .Distinct(_entryComparer)
-                        .Select(entry => entry.GetFileResult(query,
-                            CalculateDistance(entry, query),
-                            CalculateScore(entry, query))))
-                    .OrderBy(fileResult => fileResult.Type)
-                    .ThenBy(item => item, _comparer);
+                return Enumerable.Empty<IQueryResult>();
             }
+
+            // Get all matches.
+            var result = await trie.Find(query);
+            result = result.Concat(await trie.Find(query, 1));
+
+            return new HashSet<IQueryResult>(
+                result.SelectMany(x => x.Data)
+                    .Distinct(_entryComparer)
+                    .Select(entry => entry.GetFileResult(query,
+                        CalculateDistance(entry, query),
+                        CalculateScore(entry, query))))
+                .OrderBy(fileResult => fileResult.Type)
+                .ThenBy(item => item, _comparer);
         }
 
         private static float CalculateDistance(IndexedEntry entry, string query)
