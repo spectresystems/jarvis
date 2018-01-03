@@ -8,14 +8,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Jarvis.Addin.Files.Collections;
 using Jarvis.Core;
 using Jarvis.Core.Diagnostics;
 using Jarvis.Core.Scoring;
 using Jarvis.Core.Threading;
 using JetBrains.Annotations;
-using Nito.AsyncEx;
 using Spectre.System.IO;
 
 namespace Jarvis.Addin.Files.Indexing
