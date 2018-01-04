@@ -39,40 +39,46 @@ namespace Jarvis.Services
         {
             // Query all search providers.
             var providers = GetProviders(query);
-            var tasks = providers.Select(async provider =>
+
+            var queryTasks = providers
+                .Select(provider => provider.QueryAsync(query))
+                .ToList();
+
+            await Task.WhenAll(queryTasks);
+
+            var result = queryTasks
+                .Where(t => t.Status == TaskStatus.RanToCompletion)
+                .SelectMany(t => t.Result)
+                .Distinct()
+                .ToList();
+
+            // Remove items.
+            for (var i = target.Count - 1; i >= 0; i--)
             {
-                var result = (await provider.QueryAsync(query)).ToArray();
-
-                // Remove items.
-                for (var i = target.Count - 1; i >= 0; i--)
+                var current = target[i];
+                if (!result.Contains(current))
                 {
-                    var current = target[i];
-                    if (!result.Contains(current))
-                    {
-                        target.Remove(target[i]);
-                    }
+                    target.Remove(target[i]);
                 }
+            }
 
-                // Add new items.
-                foreach (var item in result)
+            // Add new items.
+            foreach (var item in result)
+            {
+                if (!target.Contains(item))
                 {
-                    if (!target.Contains(item))
+                    target.Add(item);
+                }
+                else
+                {
+                    // Same item but higher score?
+                    if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
                     {
+                        target.Remove(item);
                         target.Add(item);
                     }
-                    else
-                    {
-                        // Same item but higher score?
-                        if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
-                        {
-                            target.Remove(item);
-                            target.Add(item);
-                        }
-                    }
                 }
-            });
-
-            await Task.WhenAll(tasks);
+            }
         }
 
         public async Task Execute(IQueryResult result)
