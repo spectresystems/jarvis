@@ -9,24 +9,32 @@ using System.Windows.Media;
 
 namespace Jarvis.Core
 {
-    public abstract class QueryProvider<T> : IQueryProvider
-        where T : IQueryResult
+    public abstract class QueryProvider<TResult, TSettings> : QueryProvider<TResult>
+        where TResult : IQueryResult
+        where TSettings : ISettings
+    {
+        public override Type SettingsType => typeof(TSettings);
+    }
+
+    public abstract class QueryProvider<TResult> : IQueryProvider
+        where TResult : IQueryResult
     {
         public virtual string Command => null;
-        Type IQueryProvider.QueryType => typeof(T);
+        public virtual Type SettingsType => null;
+        Type IQueryProvider.QueryType => typeof(TResult);
 
         Task<ImageSource> IQueryProvider.GetIconAsync(IQueryResult result)
         {
-            return GetIconAsync((T)result);
+            return GetIconAsync((TResult)result);
         }
 
         Task IQueryProvider.ExecuteAsync(IQueryResult result)
         {
-            return ExecuteAsync((T)result);
+            return ExecuteAsync((TResult)result);
         }
 
-        protected abstract Task<ImageSource> GetIconAsync(T result);
-        protected abstract Task ExecuteAsync(T result);
+        protected abstract Task<ImageSource> GetIconAsync(TResult result);
+        protected abstract Task ExecuteAsync(TResult result);
 
         public abstract Task<IEnumerable<IQueryResult>> QueryAsync(Query query);
     }

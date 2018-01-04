@@ -18,7 +18,7 @@ namespace Jarvis.Core.Diagnostics
         public void WriteError(Exception exception, FormattableString message)
         {
             Debug.WriteLine(message.ToString(CultureInfo.InvariantCulture));
-            Debug.WriteLine(message.ToString());
+            Debug.WriteLine(exception.ToString());
         }
     }
 }
