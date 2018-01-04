@@ -2,7 +2,10 @@
 // Spectre Systems AB licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.ComponentModel;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -19,6 +22,7 @@ namespace Jarvis.ViewModels
     {
         private readonly ApplicationService _application;
         private readonly WindowService _windowManager;
+        private readonly Subject<string> _queryStream;
 
         [UsedImplicitly]
         public string QueryString { get; set; }
@@ -35,19 +39,27 @@ namespace Jarvis.ViewModels
         {
             _application = application;
             _windowManager = windowManager;
-
+            _queryStream = new Subject<string>();
+            SetupQueryStream();
             Result = resultViewModel;
 
             // Subscribe to messages.
             inbox.Subscribe(this);
         }
 
-        [UsedImplicitly]
-        public async Task ExecuteQuery(string queryString)
+        private void SetupQueryStream()
         {
-            QueryString = queryString;
-            await Result.ExecuteQuery(queryString);
+            _queryStream
+                .Throttle(TimeSpan.FromMilliseconds(100))
+                .Subscribe(async q =>
+                {
+                    QueryString = q;
+                    await Result.ExecuteQuery(q);
+                });
         }
+
+        [UsedImplicitly]
+        public void ExecuteQuery(string queryString) => _queryStream.OnNext(queryString);
 
         [UsedImplicitly]
         public async Task OnKeyDown(KeyEventArgs keyArgs)
