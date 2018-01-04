@@ -58,7 +58,7 @@ namespace Jarvis.Services
                 var current = target[i];
                 if (!result.Contains(current))
                 {
-                    target.Remove(target[i]);
+                    target.Remove(current);
                 }
             }
 
