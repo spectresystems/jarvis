@@ -35,7 +35,7 @@ namespace Jarvis.Services
             return null;
         }
 
-        public async Task Query(Query query, IList<IQueryResult> target)
+        public async Task<IList<IQueryResult>> Query(Query query)
         {
             // Query all search providers.
             var providers = GetProviders(query);
@@ -46,39 +46,11 @@ namespace Jarvis.Services
 
             await Task.WhenAll(queryTasks);
 
-            var result = queryTasks
+            return queryTasks
                 .Where(t => t.Status == TaskStatus.RanToCompletion)
                 .SelectMany(t => t.Result)
                 .Distinct()
                 .ToList();
-
-            // Remove items.
-            for (var i = target.Count - 1; i >= 0; i--)
-            {
-                var current = target[i];
-                if (!result.Contains(current))
-                {
-                    target.Remove(current);
-                }
-            }
-
-            // Add new items.
-            foreach (var item in result)
-            {
-                if (!target.Contains(item))
-                {
-                    target.Add(item);
-                }
-                else
-                {
-                    // Same item but higher score?
-                    if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
-                    {
-                        target.Remove(item);
-                        target.Add(item);
-                    }
-                }
-            }
         }
 
         public async Task Execute(IQueryResult result)
