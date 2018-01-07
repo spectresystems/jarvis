@@ -9,6 +9,7 @@ using Autofac;
 using Caliburn.Micro;
 using Jarvis.Addin.Files;
 using Jarvis.Addin.Google;
+using Jarvis.Addin.StackExchange;
 using Jarvis.Addin.Wikipedia;
 using Jarvis.Bootstrapping;
 using Jarvis.Infrastructure.Utilities;
@@ -38,6 +39,7 @@ namespace Jarvis
             var builder = new ContainerBuilder();
             builder.RegisterInstance(Application).As<JarvisApplication>();
             builder.RegisterModule(new JarvisModule(
+                typeof(StackExchangeAddin).Assembly,
                 typeof(FileAddin).Assembly,
                 typeof(GoogleAddin).Assembly,
                 typeof(WikipediaAddin).Assembly));
