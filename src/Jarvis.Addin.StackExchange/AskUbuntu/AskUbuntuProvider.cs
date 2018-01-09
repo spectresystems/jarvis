@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jarvis.Addin.StackExchange.Common;
+using Jarvis.Addin.StackExchange.Common.QueryLanguage;
 
 namespace Jarvis.Addin.StackExchange.AskUbuntu
 {
@@ -17,7 +18,7 @@ namespace Jarvis.Addin.StackExchange.AskUbuntu
             return Task.FromResult(_icon);
         }
 
-        public AskUbuntuProvider(IStackExchangeClient stackExchangeClient) : base(stackExchangeClient)
+        public AskUbuntuProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser) : base(stackExchangeClient, queryParser)
         {
             _icon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.StackExchange;component/Resources/AskUbuntu.png"));
         }

@@ -3,22 +3,25 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jarvis.Addin.StackExchange.Common;
+using Jarvis.Addin.StackExchange.Common.QueryLanguage;
 
 namespace Jarvis.Addin.StackExchange.StackOverflow
 {
     public class StackOverflowProvider : StackExchangeProvider<StackOverflowResult>
     {
-        private readonly ImageSource _icon;
+        private readonly Lazy<ImageSource> _icon;
         public override string Command => "so";
 
-        public StackOverflowProvider(IStackExchangeClient stackExchangeClient) : base(stackExchangeClient)
+        public StackOverflowProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser) : base(stackExchangeClient, queryParser)
         {
-            _icon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.StackExchange;component/Resources/StackOverflow.png"));
+            _icon = new Lazy<ImageSource>(() =>
+                    new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.StackExchange;component/Resources/StackOverflow.png"))
+            );
         }
 
         protected override Task<ImageSource> GetIconAsync(StackOverflowResult result)
         {
-            return Task.FromResult(_icon);
+            return Task.FromResult(_icon.Value);
         }
 
         protected override string Site => StackExchangeSites.StackOverflow;

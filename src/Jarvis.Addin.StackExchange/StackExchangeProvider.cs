@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Jarvis.Addin.StackExchange.Common;
+using Jarvis.Addin.StackExchange.Common.QueryLanguage;
 using Jarvis.Core;
 using Jarvis.Core.Scoring;
 
@@ -13,11 +14,13 @@ namespace Jarvis.Addin.StackExchange
         where TQueryResult : StackExchangeResult, new()
     {
         private readonly IStackExchangeClient _stackExchangeClient;
+        private readonly IQueryParser<SearchQuery> _queryParser;
         protected abstract string Site { get;  }
 
-        protected StackExchangeProvider(IStackExchangeClient stackExchangeClient)
+        protected StackExchangeProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser)
         {
             _stackExchangeClient = stackExchangeClient;
+            _queryParser = queryParser;
         }
 
         protected override Task ExecuteAsync(TQueryResult result)
@@ -26,9 +29,20 @@ namespace Jarvis.Addin.StackExchange
             return Task.CompletedTask;
         }
 
-        public override async Task<IEnumerable<IQueryResult>> QueryAsync(Query query)
+        public override Task<IEnumerable<IQueryResult>> QueryAsync(Query query)
         {
-            var questions = await _stackExchangeClient.SearchAsync(Site, query.Argument, CancellationToken.None);
+            return QueryAsync(query, CancellationToken.None);
+        }
+
+        public async Task<IEnumerable<IQueryResult>> QueryAsync(Query query, CancellationToken ct)
+        {
+            var searchQuery = _queryParser.Bind(query.Argument, out var freeText);
+            searchQuery.Site = Site;
+            if (string.IsNullOrEmpty(searchQuery.InTitle))
+            {
+                searchQuery.InTitle = freeText;
+            }
+            var questions = await _stackExchangeClient.SearchAsync(searchQuery, ct);
             return questions.Select(question => ConvertQuestion(question, query));
         }
 

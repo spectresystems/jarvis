@@ -6,6 +6,7 @@ using Autofac;
 using Autofac.Core;
 using Jarvis.Addin.StackExchange.AskUbuntu;
 using Jarvis.Addin.StackExchange.Common;
+using Jarvis.Addin.StackExchange.Common.QueryLanguage;
 using Jarvis.Addin.StackExchange.StackOverflow;
 using Jarvis.Core;
 using Newtonsoft.Json;
@@ -24,6 +25,10 @@ namespace Jarvis.Addin.StackExchange
 
             builder
                 .RegisterType<QueryStringBuilder>()
+                .AsImplementedInterfaces();
+
+            builder
+                .RegisterType<QueryParser<SearchQuery>>()
                 .AsImplementedInterfaces();
 
             builder

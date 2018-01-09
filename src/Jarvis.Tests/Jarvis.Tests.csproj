@@ -89,6 +89,7 @@
     <Compile Include="Fakes\FakeHttpHandler.cs" />
     <Compile Include="Unit\Addins\StackExchange\QueryParserTests.cs" />
     <Compile Include="Unit\Addins\StackExchange\StackExchangeClientTests.cs" />
+    <Compile Include="Unit\Addins\StackExchange\StackOverflowProviderTests.cs" />
     <Compile Include="Unit\Core\Scoring\LevenshteinScorerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\JsonContent.cs" />
