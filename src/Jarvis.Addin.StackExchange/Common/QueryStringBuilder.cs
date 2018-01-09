@@ -71,14 +71,14 @@ namespace Jarvis.Addin.StackExchange.Common
                 queryParameters.Append($"&pagesize={query.PageSize}");
             }
 
-            if (query.FromDate != default)
+            if (query.From != default)
             {
-                queryParameters.Append($"&fromdate={query.FromDate.ToEpoch()}");
+                queryParameters.Append($"&fromdate={query.From.ToEpoch()}");
             }
 
-            if (query.ToDate != default)
+            if (query.To != default)
             {
-                queryParameters.Append($"&todate={query.ToDate.ToEpoch()}");
+                queryParameters.Append($"&todate={query.To.ToEpoch()}");
             }
 
             return queryParameters.ToString();

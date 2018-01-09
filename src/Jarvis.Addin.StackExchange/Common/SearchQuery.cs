@@ -9,8 +9,8 @@ namespace Jarvis.Addin.StackExchange.Common
         public string Site { get; set; }
         public uint Page { get; set; }
         public uint PageSize { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime ToDate { get; set; }
+        public DateTime From { get; set; }
+        public DateTime To { get; set; }
         public SortType Sort { get; set; }
         public SortOrder Order { get; set; }
         public string InTitle { get; set; }

@@ -57,6 +57,9 @@
     <Compile Include="AskUbuntu\AskUbuntuResult.cs" />
     <Compile Include="Common\EpochDateTimeExtensions.cs" />
     <Compile Include="Common\EpochJsonConverter.cs" />
+    <Compile Include="Common\QueryLanguage\IQueryParser.cs" />
+    <Compile Include="Common\QueryLanguage\QueryParser.cs" />
+    <Compile Include="Common\QueryLanguage\QueryParserExtensions.cs" />
     <Compile Include="Common\QueryStringBuilder.cs" />
     <Compile Include="Common\SearchQuery.cs" />
     <Compile Include="Common\StackExchangeClient.cs" />
@@ -87,5 +90,6 @@
   <ItemGroup>
     <Resource Include="Resources\AskUbuntu.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
