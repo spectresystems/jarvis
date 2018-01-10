@@ -15,12 +15,14 @@ namespace Jarvis.Addin.StackExchange
     {
         private readonly IStackExchangeClient _stackExchangeClient;
         private readonly IQueryParser<SearchQuery> _queryParser;
+        private readonly IQuestionDescriptionFactory _descriptionFactory;
         protected abstract string Site { get;  }
 
-        protected StackExchangeProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser)
+        protected StackExchangeProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser, IQuestionDescriptionFactory descriptionFactory)
         {
             _stackExchangeClient = stackExchangeClient;
             _queryParser = queryParser;
+            _descriptionFactory = descriptionFactory;
         }
 
         protected override Task ExecuteAsync(TQueryResult result)
@@ -50,9 +52,9 @@ namespace Jarvis.Addin.StackExchange
         {
             return new TQueryResult
             {
-                Description = question.Title,
-                Uri = question.Link,
                 Title = question.Title,
+                Description = _descriptionFactory.Create(question),
+                Uri = question.Link,
                 Type = QueryResultType.Other,
                 Distance = LevenshteinScorer.Distance(query.Argument, question.Title),
                 Score = LevenshteinScorer.Score(query.Argument, question.Title)

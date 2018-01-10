@@ -32,6 +32,10 @@ namespace Jarvis.Addin.StackExchange
                 .AsImplementedInterfaces();
 
             builder
+                .RegisterType<QuestionDescriptionFactory>()
+                .AsImplementedInterfaces();
+
+            builder
                 .Register(StackExchangeJsonDeserializer)
                 .Named(nameof(StackExchangeJsonDeserializer), typeof(JsonSerializer))
                 .SingleInstance();

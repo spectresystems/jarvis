@@ -61,6 +61,7 @@
     <Compile Include="Common\QueryLanguage\QueryParser.cs" />
     <Compile Include="Common\QueryLanguage\QueryParserExtensions.cs" />
     <Compile Include="Common\QueryStringBuilder.cs" />
+    <Compile Include="Common\QuestionDescriptionFactory.cs" />
     <Compile Include="Common\SearchQuery.cs" />
     <Compile Include="Common\StackExchangeClient.cs" />
     <Compile Include="Common\StackExchangeClientExtensions.cs" />

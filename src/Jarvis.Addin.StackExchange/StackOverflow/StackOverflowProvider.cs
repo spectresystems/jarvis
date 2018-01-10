@@ -12,7 +12,8 @@ namespace Jarvis.Addin.StackExchange.StackOverflow
         private readonly Lazy<ImageSource> _icon;
         public override string Command => "so";
 
-        public StackOverflowProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser) : base(stackExchangeClient, queryParser)
+        public StackOverflowProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser, IQuestionDescriptionFactory descriptionFactory)
+            : base(stackExchangeClient, queryParser, descriptionFactory)
         {
             _icon = new Lazy<ImageSource>(() =>
                     new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.StackExchange;component/Resources/StackOverflow.png"))

@@ -23,7 +23,8 @@ namespace Jarvis.Tests.Unit.Addins.StackExchange
 
             var stackExchangeClient = Substitute.For<IStackExchangeClient>();
             var queryParser = new QueryParser<SearchQuery>();
-            var provider = new StackOverflowProvider(stackExchangeClient, queryParser);
+            var descriptionFactory = Substitute.For<IQuestionDescriptionFactory>();
+            var provider = new StackOverflowProvider(stackExchangeClient, queryParser, descriptionFactory);
 
             stackExchangeClient
                 .SearchAsync(Arg.Any<SearchQuery>(), CancellationToken.None)
@@ -48,7 +49,8 @@ namespace Jarvis.Tests.Unit.Addins.StackExchange
 
             var stackExchangeClient = Substitute.For<IStackExchangeClient>();
             var queryParser = new QueryParser<SearchQuery>();
-            var provider = new StackOverflowProvider(stackExchangeClient, queryParser);
+            var descriptionFactory = Substitute.For<IQuestionDescriptionFactory>();
+            var provider = new StackOverflowProvider(stackExchangeClient, queryParser, descriptionFactory);
 
             stackExchangeClient
                 .SearchAsync(Arg.Any<SearchQuery>(), CancellationToken.None)

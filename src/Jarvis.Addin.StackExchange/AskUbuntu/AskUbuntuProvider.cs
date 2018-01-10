@@ -18,7 +18,8 @@ namespace Jarvis.Addin.StackExchange.AskUbuntu
             return Task.FromResult(_icon);
         }
 
-        public AskUbuntuProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser) : base(stackExchangeClient, queryParser)
+        public AskUbuntuProvider(IStackExchangeClient stackExchangeClient, IQueryParser<SearchQuery> queryParser, IQuestionDescriptionFactory descriptionFactory)
+            : base(stackExchangeClient, queryParser, descriptionFactory)
         {
             _icon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.StackExchange;component/Resources/AskUbuntu.png"));
         }
