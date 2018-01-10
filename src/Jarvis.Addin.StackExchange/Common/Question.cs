@@ -8,19 +8,19 @@ namespace Jarvis.Addin.StackExchange.Common
         public IList<string> Tags { get; set; }
         public User Owner { get; set; }
         public bool IsAnswered { get; set; }
-        public ulong ViewCount { get; set; }
-        public ulong AnswerCount { get; set; }
-        public ulong Score { get; set; }
+        public long ViewCount { get; set; }
+        public long AnswerCount { get; set; }
+        public long Score { get; set; }
         public DateTime LastActivityDate { get; set; }
         public DateTime CreationDate { get; set; }
-        public ulong QuestionId { get; set; }
+        public long QuestionId { get; set; }
         public Uri Link { get; set; }
         public string Title { get; set; }
 
         public class User
         {
-            public ulong Reputation { get; set; }
-            public ulong UserId { get; set; }
+            public long Reputation { get; set; }
+            public long UserId { get; set; }
             public string UserType { get; set; }
             public ushort AcceptRate { get; set; }
             public Uri ProfileImage { get; set; }

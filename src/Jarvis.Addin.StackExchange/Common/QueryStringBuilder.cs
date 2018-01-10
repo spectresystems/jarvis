@@ -23,7 +23,7 @@ namespace Jarvis.Addin.StackExchange.Common
             if (query.Tagged.Any())
             {
                 var firstChar = queryParameters.Length == 0 ? "?" : "&";
-                queryParameters.Append($"{firstChar}{string.Join(";", query.Tagged.Select(Encode))}");
+                queryParameters.Append($"{firstChar}tagged={string.Join(";", query.Tagged.Select(Encode))}");
             }
 
             if (query.NotTagged.Any())
