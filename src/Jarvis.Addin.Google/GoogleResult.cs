@@ -59,7 +59,7 @@ namespace Jarvis.Addin.Google
             description = description ?? term;
 
             var isGoogleQuery = !(term.StartsWith("http://") || term.StartsWith("https://"));
-            var uri = isGoogleQuery ? new Uri($"https://www.google.se/search?q={WebUtility.UrlEncode(term)}") : new Uri(term);
+            var uri = isGoogleQuery ? new Uri($"https://www.google.com/search?q={WebUtility.UrlEncode(term)}") : new Uri(term);
             return new GoogleResult(uri, isGoogleQuery, description, uri.AbsoluteUri,
                 isGoogleQuery ? LevenshteinScorer.Score(term, query.Argument, false) : 0,
                 isGoogleQuery ? LevenshteinScorer.Score(term, query.Argument) : 0);

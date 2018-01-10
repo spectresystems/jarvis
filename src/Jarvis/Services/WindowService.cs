@@ -10,17 +10,28 @@ using JetBrains.Annotations;
 namespace Jarvis.Services
 {
     [UsedImplicitly]
-    public sealed class JarvisWindowManager : WindowManager
+    public sealed class WindowService : WindowManager
     {
+        private readonly ApplicationService _application;
         private readonly UpdateViewModel.Factory _updateFactory;
+        private readonly SettingsViewModel.Factory _settingsFactory;
         private readonly AboutViewModel.Factory _aboutFactory;
 
-        public JarvisWindowManager(
+        public WindowService(
+            ApplicationService application,
             UpdateViewModel.Factory updateFactory,
+            SettingsViewModel.Factory settingsFactory,
             AboutViewModel.Factory aboutFactory)
         {
+            _application = application;
             _updateFactory = updateFactory;
+            _settingsFactory = settingsFactory;
             _aboutFactory = aboutFactory;
+        }
+
+        public void ShowQueryWindow()
+        {
+            _application.Show();
         }
 
         public void ShowUpdateWindow(JarvisUpdateInfo info)
@@ -32,6 +43,14 @@ namespace Jarvis.Services
                     ShowDialog(_updateFactory(info));
                 });
             }
+        }
+
+        public void ShowSettingsWindow()
+        {
+            Execute.OnUIThread(() =>
+            {
+                ShowDialog(_settingsFactory());
+            });
         }
 
         public void ShowAboutWindow()

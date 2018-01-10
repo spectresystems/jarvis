@@ -18,7 +18,7 @@
             <Custom Action="WixCloseApplications" Before="InstallInitialize" />
         </InstallExecuteSequence>
 
-        <util:CloseApplication Id="CloseApp" RebootPrompt="no" Target="Jarvis.exe" />
+        <util:CloseApplication Id="CloseApp" RebootPrompt="no" CloseMessage="yes" Target="Jarvis.exe" />
 
         <Icon Id="Jarvis.exe" SourceFile="$(var.PublishDirectory)\Jarvis.exe" />
         <Property Id="ARPPRODUCTICON" Value="Jarvis.exe" />
@@ -83,12 +83,6 @@
             <Component Id="Microsoft.Threading.Tasks.Extensions.dll" Guid="8475143C-877E-4DF5-8D50-B6276817C1DB">
                 <File Id="Microsoft.Threading.Tasks.Extensions.dll" Source="$(var.PublishDirectory)\Microsoft.Threading.Tasks.Extensions.dll" KeyPath="yes" Checksum="yes" />
             </Component>
-            <Component Id="Nito.AsyncEx.dll" Guid="B27845EE-56BF-4463-A95C-1C91D95FC163">
-                <File Id="Nito.AsyncEx.dll" Source="$(var.PublishDirectory)\Nito.AsyncEx.dll" KeyPath="yes" Checksum="yes" />
-            </Component>
-            <Component Id="Nito.AsyncEx.Enlightenment.dll" Guid="9305DC51-2DA3-418C-9FF6-3C469E80C868">
-                <File Id="Nito.AsyncEx.Enlightenment.dll" Source="$(var.PublishDirectory)\Nito.AsyncEx.Enlightenment.dll" KeyPath="yes" Checksum="yes" />
-            </Component>
             <Component Id="Serilog.dll" Guid="AB8EA697-03B4-46D6-ADCC-9B4FA51B4E6E">
                 <File Id="Serilog.dll" Source="$(var.PublishDirectory)\Serilog.dll" KeyPath="yes" Checksum="yes" />
             </Component>
@@ -120,8 +114,6 @@
             <ComponentRef Id="Microsoft.Threading.Tasks.dll" />
             <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.Desktop.dll" />
             <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.dll" />
-            <ComponentRef Id="Nito.AsyncEx.dll" />
-            <ComponentRef Id="Nito.AsyncEx.Enlightenment.dll" />
             <ComponentRef Id="Serilog.dll" />
             <ComponentRef Id="Serilog.Sinks.File.dll" />
             <ComponentRef Id="Spectre.System.dll" />

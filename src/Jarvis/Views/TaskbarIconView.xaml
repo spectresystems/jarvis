@@ -4,9 +4,10 @@
                     xmlns:tb="http://www.hardcodet.net/taskbar">
 
     <ContextMenu x:Shared="false" x:Key="MainSysTrayMenu">
-        <MenuItem Header="Show Jarvis..." InputGestureText="Alt+Space" cal:Message.Attach="ShowJarvis" />
+        <MenuItem Header="Search" InputGestureText="Alt+Space" cal:Message.Attach="ShowJarvis" />
+        <MenuItem Header="Settings..." cal:Message.Attach="ShowSettings" />
         <Separator />
-        <MenuItem Header="Exit Jarvis..." cal:Message.Attach="ExitJarvis" />
+        <MenuItem Header="Exit" cal:Message.Attach="ExitJarvis" />
     </ContextMenu>
 
     <tb:TaskbarIcon x:Key="SystemTrayIcon"

@@ -14,12 +14,14 @@ namespace Jarvis.ViewModels
     [UsedImplicitly]
     public sealed class TaskbarIconViewModel
     {
-        private readonly ApplicationService _application;
+        private readonly WindowService _windowManager;
         private readonly IEventAggregator _eventAggregator;
 
-        public TaskbarIconViewModel(ApplicationService application, IEventAggregator eventAggregator)
+        public TaskbarIconViewModel(
+            WindowService windowManager,
+            IEventAggregator eventAggregator)
         {
-            _application = application;
+            _windowManager = windowManager;
             _eventAggregator = eventAggregator;
         }
 
@@ -36,7 +38,12 @@ namespace Jarvis.ViewModels
 
         public void ShowJarvis()
         {
-            _application.Show();
+            _windowManager.ShowQueryWindow();
+        }
+
+        public void ShowSettings()
+        {
+            _windowManager.ShowSettingsWindow();
         }
 
         [UsedImplicitly]
