@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jarvis.Addin.StackExchange.Common;
 using Jarvis.Addin.StackExchange.Common.QueryLanguage;
+using Jarvis.Core;
 
 namespace Jarvis.Addin.StackExchange.StackOverflow
 {
@@ -26,5 +28,19 @@ namespace Jarvis.Addin.StackExchange.StackOverflow
         }
 
         protected override string Site => StackExchangeSites.StackOverflow;
+
+        protected override IEnumerable<StackOverflowResult> CreateFallbackResult(SearchQuery query)
+        {
+            var url = new Uri($"https://stackoverflow.com/search?q={query.InTitle.Replace(' ', '_')}");
+            yield return new StackOverflowResult
+            {
+                Title = $"Search StackOverflow for '{query.InTitle}'",
+                Uri = url,
+                Description = url.ToString(),
+                Type = QueryResultType.Other,
+                Distance = 0,
+                Score = 0
+            };
+        }
     }
 }

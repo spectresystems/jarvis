@@ -45,8 +45,14 @@ namespace Jarvis.Addin.StackExchange
                 searchQuery.InTitle = freeText;
             }
             var questions = await _stackExchangeClient.SearchAsync(searchQuery, ct);
+            if (!questions.Any())
+            {
+                return CreateFallbackResult(searchQuery);
+            }
             return questions.Select(question => ConvertQuestion(question, query));
         }
+
+        protected abstract IEnumerable<TQueryResult> CreateFallbackResult(SearchQuery query);
 
         protected virtual TQueryResult ConvertQuestion(Question question, Query query)
         {
