@@ -41,7 +41,7 @@ namespace Jarvis.Services.Updating
                 var response = await _client.GetAsync(uri);
                 if (!response.IsSuccessStatusCode)
                 {
-                    _log.Warning($"GitHub returned status code {response.StatusCode} ({(int)response.StatusCode}) when checking for updates.");
+                    _log.Warning("GitHub returned status code {@statusCode} when checking for updates.", response.StatusCode);
                     return null;
                 }
 

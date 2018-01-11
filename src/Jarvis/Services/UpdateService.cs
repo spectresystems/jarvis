@@ -31,7 +31,7 @@ namespace Jarvis.Services
         public async Task<bool> Run(CancellationToken token)
         {
 #if !DEBUG || FAKERELEASE
-            // Wait a minute after the application starts to check for updates.
+            // Wait for 30 seconds after the application starts to check for updates.
             if (token.WaitHandle.WaitOne((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
             {
                 _log.Information("We were instructed to stop (1).");
@@ -45,7 +45,7 @@ namespace Jarvis.Services
                 var result = await _checker.CheckForUpdates();
                 if (result != null && result.FutureVersion > result.CurrentVersion)
                 {
-                    _log.Information($"New version available: {result.FutureVersion}");
+                    _log.Information("New version available: {futureVersion}", result.FutureVersion);
                     _eventAggregator.PublishOnUIThread(new UpdateAvailableMessage(result));
 
                     // Don't run this check again.

@@ -26,7 +26,7 @@ namespace Jarvis.Core.Threading
 
         public Task Start(CancellationTokenSource source)
         {
-            _log.Information($"Starting {Name.ToLowerInvariant()}...");
+            _log.Information("Starting {workerName}...", Name.ToLowerInvariant());
             _source = source;
 
             Task = Task.Factory.StartNew(
@@ -34,7 +34,7 @@ namespace Jarvis.Core.Threading
             {
                 try
                 {
-                    _log.Information($"{Name} started.");
+                    _log.Information("{workerName} started.", Name);
                     if (!await _worker.Run(_source.Token))
                     {
                         _source.Cancel();
@@ -46,12 +46,12 @@ namespace Jarvis.Core.Threading
                 }
                 catch (Exception ex)
                 {
-                    _log.Error($"{Name}: {ex.Message} ({ex.GetType().FullName})");
+                    _log.Error(ex, "An exception was thrown by {workerName}.", Name);
                     _source.Cancel();
                 }
                 finally
                 {
-                    _log.Information($"{Name} stopped.");
+                    _log.Information("{workerName} stopped.", Name);
                 }
             }, TaskCreationOptions.LongRunning);
 
