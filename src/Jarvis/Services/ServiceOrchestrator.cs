@@ -23,7 +23,7 @@ namespace Jarvis.Services
 
         public ServiceOrchestrator(IEnumerable<IBackgroundWorker> workers, IJarvisLog log)
         {
-            _log = new LogDecorator("ServiceOrchestrator", log);
+            _log = log;
             _workers = new List<IBackgroundWorker>(workers);
             _tasks = new List<Task>();
             _stopped = new ManualResetEvent(true);

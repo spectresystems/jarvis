@@ -33,7 +33,7 @@ namespace Jarvis.Addin.Files.Indexing
 
         public FileIndexer(IEnumerable<IFileIndexSource> sources, IJarvisLog log)
         {
-            _log = new LogDecorator("FileIndexer", log);
+            _log = log;
             _sources = new List<IFileIndexSource>(sources ?? Array.Empty<IFileIndexSource>());
             _stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "to", "the" };
             _comparer = new ScoreComparer();

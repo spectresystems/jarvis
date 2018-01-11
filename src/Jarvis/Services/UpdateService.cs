@@ -25,7 +25,7 @@ namespace Jarvis.Services
         {
             _checker = checker;
             _eventAggregator = eventAggregator;
-            _log = new LogDecorator("UpdateService", log);
+            _log = log;
         }
 
         public async Task<bool> Run(CancellationToken token)
