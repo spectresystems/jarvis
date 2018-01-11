@@ -10,7 +10,7 @@ using Color = System.Windows.Media.Color;
 using ColorConverter = System.Windows.Media.ColorConverter;
 using Pen = System.Windows.Media.Pen;
 
-namespace Jarvis.Addin.Files.Drawing
+namespace Jarvis.Addin.Files.Icons
 {
     internal static class UwpIconLoader
     {

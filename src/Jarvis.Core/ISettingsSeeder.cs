@@ -4,10 +4,8 @@
 
 namespace Jarvis.Core
 {
-    public interface ISettingsStore
+    public interface ISettingsSeeder
     {
-        bool Exist(string key);
-        string Get(string key);
-        void Set(string key, string value);
+        void Seed(ISettingsStore store);
     }
 }
