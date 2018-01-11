@@ -10,8 +10,9 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using Jarvis.Addin.Files.Drawing;
+using Jarvis.Addin.Files.Icons;
 using Jarvis.Addin.Files.Indexing;
+using Jarvis.Addin.Files.ViewModels;
 using Jarvis.Core;
 using JetBrains.Annotations;
 using static Jarvis.Addin.Files.Sources.Uwp.ShellInterop;
@@ -19,7 +20,7 @@ using static Jarvis.Addin.Files.Sources.Uwp.ShellInterop;
 namespace Jarvis.Addin.Files
 {
     [UsedImplicitly]
-    internal sealed class FileProvider : QueryProvider<FileResult>
+    internal sealed class FileProvider : QueryProvider<FileResult, FileSettingsViewModel>
     {
         private readonly IFileIndex _index;
         private readonly IconLoader _loader;

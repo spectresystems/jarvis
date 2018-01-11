@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Jarvis.Core.Interop;
 
-namespace Jarvis.Addin.Files.Drawing
+namespace Jarvis.Addin.Files.Icons
 {
     internal static class ShellIconLoader
     {

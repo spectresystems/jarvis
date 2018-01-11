@@ -80,6 +80,10 @@ namespace Jarvis.ViewModels
 
             // Save the settings.
             _settings.Save();
+            foreach (var item in Items)
+            {
+                item.OnSaved();
+            }
 
             // Close the dialog.
             TryClose(true);
