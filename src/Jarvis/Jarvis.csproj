@@ -114,6 +114,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Infrastructure\Diagnostics\LogLevelExtensions.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">
       <DependentUpon>IconControl.xaml</DependentUpon>

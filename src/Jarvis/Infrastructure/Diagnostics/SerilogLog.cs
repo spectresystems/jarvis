@@ -6,6 +6,8 @@ using System;
 using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using Serilog;
+using Serilog.Context;
+using Serilog.Core.Enrichers;
 
 namespace Jarvis.Infrastructure.Diagnostics
 {
@@ -19,36 +21,19 @@ namespace Jarvis.Infrastructure.Diagnostics
             _logger = logger;
         }
 
-        public void Write(LogLevel level, FormattableString message)
+        public IDisposable BeginScope(string name, string value)
         {
-            switch (level)
-            {
-                case LogLevel.Fatal:
-                    _logger.Fatal(message.Format, message.GetArguments());
-                    break;
-                case LogLevel.Error:
-                    _logger.Error(message.Format, message.GetArguments());
-                    break;
-                case LogLevel.Warning:
-                    _logger.Warning(message.Format, message.GetArguments());
-                    break;
-                case LogLevel.Information:
-                    _logger.Information(message.Format, message.GetArguments());
-                    break;
-                case LogLevel.Verbose:
-                    _logger.Verbose(message.Format, message.GetArguments());
-                    break;
-                case LogLevel.Debug:
-                    _logger.Debug(message.Format, message.GetArguments());
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(level), level, null);
-            }
+            return LogContext.Push(new PropertyEnricher(name, value));
         }
 
-        public void WriteError(Exception exception, FormattableString message)
+        public void Write(LogLevel logLevel, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            _logger.Error(exception, message.Format, message.GetArguments());
+            _logger.Write(logLevel.AsSerilogLevel(), exception, messageTemplate, propertyValues);
+        }
+
+        public bool IsEnabled(LogLevel logLevel)
+        {
+            return _logger.IsEnabled(logLevel.AsSerilogLevel());
         }
     }
 }
