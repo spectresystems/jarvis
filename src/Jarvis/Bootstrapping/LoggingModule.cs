@@ -50,7 +50,7 @@ namespace Jarvis.Bootstrapping
             registration.Preparing += (sender, args) =>
             {
                 var serilogLogger = Log.ForContext(
-                    Constants.SourceContextPropertyName, 
+                    Constants.SourceContextPropertyName,
                     registration.Activator.LimitType.Name
                 );
                 IJarvisLog jarvisLogger = new SerilogLog(serilogLogger);
