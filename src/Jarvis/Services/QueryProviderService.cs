@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Jarvis.Core;
+using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using IQueryProvider = Jarvis.Core.IQueryProvider;
 
@@ -16,11 +17,13 @@ namespace Jarvis.Services
     [UsedImplicitly]
     public sealed class QueryProviderService
     {
+        private readonly IJarvisLog _logger;
         private readonly Dictionary<Type, IQueryProvider> _providers;
         private readonly ILookup<string, IQueryProvider> _providersByPrefix;
 
-        public QueryProviderService(IEnumerable<IQueryProvider> providers)
+        public QueryProviderService(IEnumerable<IQueryProvider> providers, IJarvisLog logger)
         {
+            _logger = logger;
             var queryProviders = providers as IQueryProvider[] ?? providers.ToArray();
             _providers = queryProviders.ToDictionary(x => x.QueryType, x => x);
             _providersByPrefix = queryProviders.Where(x => x.Command != null).ToLookup(x => x.Command, x => x, StringComparer.OrdinalIgnoreCase);
@@ -37,42 +40,50 @@ namespace Jarvis.Services
 
         public async Task Query(Query query, IList<IQueryResult> target)
         {
-            // Query all search providers.
-            var providers = GetProviders(query);
-            var tasks = providers.Select(async provider =>
+            using (_logger.BeginScope(LogProperties.QueryId, Guid.NewGuid()))
+            using (_logger.TimedOperation("Query {rawQuery}", query.Raw))
             {
-                var result = (await provider.QueryAsync(query)).ToArray();
-
-                // Remove items.
-                for (var i = target.Count - 1; i >= 0; i--)
+                // Query all search providers.
+                var providers = GetProviders(query);
+                var tasks = providers.Select(async provider =>
                 {
-                    var current = target[i];
-                    if (!result.Contains(current))
+                    IQueryResult[] result;
+                    using (_logger.TimedOperation(LogLevel.Verbose, "{providerName} query", provider.GetType().Name))
                     {
-                        target.Remove(target[i]);
+                        result = (await provider.QueryAsync(query)).ToArray();
                     }
-                }
 
-                // Add new items.
-                foreach (var item in result)
-                {
-                    if (!target.Contains(item))
+                    // Remove items.
+                    for (var i = target.Count - 1; i >= 0; i--)
                     {
-                        target.Add(item);
-                    }
-                    else
-                    {
-                        // Same item but higher score?
-                        if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
+                        var current = target[i];
+                        if (!result.Contains(current))
                         {
-                            target.Remove(item);
-                            target.Add(item);
+                            target.Remove(target[i]);
                         }
                     }
-                }
-            });
 
-            await Task.WhenAll(tasks);
+                    // Add new items.
+                    foreach (var item in result)
+                    {
+                        if (!target.Contains(item))
+                        {
+                            target.Add(item);
+                        }
+                        else
+                        {
+                            // Same item but higher score?
+                            if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
+                            {
+                                target.Remove(item);
+                                target.Add(item);
+                            }
+                        }
+                    }
+                });
+
+                await Task.WhenAll(tasks);
+            }
         }
 
         public async Task Execute(IQueryResult result)

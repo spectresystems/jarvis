@@ -11,6 +11,7 @@ namespace Jarvis.Core.Diagnostics
         Warning = 2,
         Information = 3,
         Verbose = 4,
-        Debug = 5
+        Debug = 5,
+        Silent = 6
     }
 }

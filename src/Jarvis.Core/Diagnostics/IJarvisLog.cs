@@ -14,7 +14,7 @@ namespace Jarvis.Core.Diagnostics
         /// <param name="name"> Name of the scope.</param>
         /// <param name="value"> Value of the scope.</param>
         /// <returns>An IDisposable that ends the logical operation scope on dispose.</returns>
-        IDisposable BeginScope(string name, string value);
+        IDisposable BeginScope(string name, object value);
 
         /// <summary>
         /// Writes a log entry.

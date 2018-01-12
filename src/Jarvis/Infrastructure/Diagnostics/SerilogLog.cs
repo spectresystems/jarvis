@@ -7,7 +7,6 @@ using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using Serilog;
 using Serilog.Context;
-using Serilog.Core.Enrichers;
 
 namespace Jarvis.Infrastructure.Diagnostics
 {
@@ -21,9 +20,9 @@ namespace Jarvis.Infrastructure.Diagnostics
             _logger = logger;
         }
 
-        public IDisposable BeginScope(string name, string value)
+        public IDisposable BeginScope(string name, object value)
         {
-            return LogContext.Push(new PropertyEnricher(name, value));
+            return LogContext.PushProperty(name, value);
         }
 
         public void Write(LogLevel logLevel, Exception exception, string messageTemplate, params object[] propertyValues)

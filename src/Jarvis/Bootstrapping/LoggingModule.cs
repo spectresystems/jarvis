@@ -22,21 +22,28 @@ namespace Jarvis.Bootstrapping
     {
         protected override void Load(ContainerBuilder builder)
         {
-            Log.Logger = new LoggerConfiguration()
+            var loggerConfig = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .Destructure.ByTransforming<HttpStatusCode>(code => $"{code} ({(int)code}")
-                .Enrich.FromLogContext()
+                .Destructure.ByTransforming<HttpStatusCode>(code => $"{code} ({(int) code}")
+                .Enrich.FromLogContext();
+
 #if DEBUG && !FAKERELEASE
 
-                .WriteTo.Debug(outputTemplate: "[{Timestamp:HH:mm:ss}][{Level}][{SourceContext}] {Message}{NewLine}{Exception}")
+            Serilog.Debugging.SelfLog.Enable(s => System.Diagnostics.Debug.WriteLine(s));
+
+            loggerConfig
+                .WriteTo.Debug(outputTemplate: "[{Timestamp:HH:mm:ss}][{Level}][{SourceContext}] {Message} {Properties}{NewLine}{Exception}");
 
 #else
+
+            loggerConfig
                 .WriteTo.File(
                     PathUtility.LogPath.CombineWithFilePath(new FilePath("log.txt")).FullPath,
                     rollingInterval: RollingInterval.Day,
-                    retainedFileCountLimit: 7)
+                    retainedFileCountLimit: 7);
+
 #endif
-                .CreateLogger();
+            Log.Logger = loggerConfig.CreateLogger();
         }
 
         protected override void AttachToComponentRegistration(IComponentRegistry componentRegistry, IComponentRegistration registration)
