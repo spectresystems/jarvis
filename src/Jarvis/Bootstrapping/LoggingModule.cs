@@ -24,7 +24,7 @@ namespace Jarvis.Bootstrapping
         {
             var loggerConfig = new LoggerConfiguration()
                 .MinimumLevel.Verbose()
-                .Destructure.ByTransforming<HttpStatusCode>(code => $"{code} ({(int) code}")
+                .Destructure.ByTransforming<HttpStatusCode>(code => $"{code} ({(int)code}")
                 .Enrich.FromLogContext();
 
 #if DEBUG && !FAKERELEASE
@@ -58,8 +58,7 @@ namespace Jarvis.Bootstrapping
             {
                 var serilogLogger = Log.ForContext(
                     Constants.SourceContextPropertyName,
-                    registration.Activator.LimitType.Name
-                );
+                    registration.Activator.LimitType.Name);
                 IJarvisLog jarvisLogger = new SerilogLog(serilogLogger);
                 args.Parameters = new[] { TypedParameter.From(jarvisLogger) }.Concat(args.Parameters);
             };
