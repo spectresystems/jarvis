@@ -8,6 +8,7 @@
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="Bootstrapper" />
                 </ResourceDictionary>
+                <ResourceDictionary Source="Resources/JarvisStyles.xaml" />
                 <ResourceDictionary Source="Views/TaskbarIconView.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
