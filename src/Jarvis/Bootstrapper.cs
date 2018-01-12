@@ -11,6 +11,7 @@ using Jarvis.Addin.Files;
 using Jarvis.Addin.Google;
 using Jarvis.Addin.Wikipedia;
 using Jarvis.Bootstrapping;
+using Jarvis.Core;
 using Jarvis.Infrastructure.Utilities;
 using Jarvis.Services;
 using Jarvis.ViewModels;
@@ -49,6 +50,16 @@ namespace Jarvis
 
         protected override void OnStartup(object sender, StartupEventArgs e)
         {
+            // Set custom namespace mappings.
+            ViewLocator.AddNamespaceMapping("Jarvis.ViewModels.Settings", "Jarvis.Views.Settings");
+
+            // Initialize everything that needs to.
+            var initializables = IoC.GetAll<IInitializable>();
+            foreach (var initializable in initializables)
+            {
+                initializable.Initialize();
+            }
+
             // Show the root view.
             DisplayRootViewFor<ShellViewModel>();
             Application?.MainWindow?.Hide();

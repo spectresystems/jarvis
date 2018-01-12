@@ -18,7 +18,7 @@
             <Custom Action="WixCloseApplications" Before="InstallInitialize" />
         </InstallExecuteSequence>
 
-        <util:CloseApplication Id="CloseApp" RebootPrompt="no" Target="Jarvis.exe" />
+        <util:CloseApplication Id="CloseApp" RebootPrompt="no" CloseMessage="yes" Target="Jarvis.exe" />
 
         <Icon Id="Jarvis.exe" SourceFile="$(var.PublishDirectory)\Jarvis.exe" />
         <Property Id="ARPPRODUCTICON" Value="Jarvis.exe" />

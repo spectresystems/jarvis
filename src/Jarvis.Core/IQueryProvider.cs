@@ -13,6 +13,8 @@ namespace Jarvis.Core
     {
         string Command { get; }
         Type QueryType { get; }
+        Type SettingsType { get; }
+
         Task<ImageSource> GetIconAsync(IQueryResult result);
         Task<IEnumerable<IQueryResult>> QueryAsync(Query query);
         Task ExecuteAsync(IQueryResult result);

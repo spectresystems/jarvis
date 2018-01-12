@@ -6,6 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Caliburn.Micro;
+using Jarvis.Core;
 using Jarvis.Core.Diagnostics;
 using Jarvis.Core.Threading;
 using Jarvis.Messages;
@@ -16,14 +17,17 @@ namespace Jarvis.Services
     public sealed class UpdateService : IBackgroundWorker
     {
         private readonly IUpdateChecker _checker;
+        private readonly ISettingsStore _settings;
         private readonly IEventAggregator _eventAggregator;
         private readonly IJarvisLog _log;
 
         public string Name => "Update service";
 
-        public UpdateService(IUpdateChecker checker, IJarvisLog log, IEventAggregator eventAggregator)
+        public UpdateService(IUpdateChecker checker, ISettingsStore settings,
+            IEventAggregator eventAggregator, IJarvisLog log)
         {
             _checker = checker;
+            _settings = settings;
             _eventAggregator = eventAggregator;
             _log = log;
         }
@@ -38,6 +42,13 @@ namespace Jarvis.Services
                 return true;
             }
 #endif
+
+            // Should we even check for updates?
+            if (!_settings.Get<bool>(Constants.Settings.General.CheckForUpdates))
+            {
+                _log.Information("We were instructed to stop since we should not check for updates.");
+                return true;
+            }
 
             while (true)
             {

@@ -7,8 +7,8 @@ using System.Reflection;
 
 [assembly: AssemblyCompany("Spectre Systems AB")]
 [assembly: AssemblyProduct("Jarvis")]
-[assembly: AssemblyVersion("0.5.0")]
-[assembly: AssemblyFileVersion("0.5.0")]
-[assembly: AssemblyInformationalVersion("0.5.0")]
+[assembly: AssemblyVersion("0.6.0")]
+[assembly: AssemblyFileVersion("0.6.0")]
+[assembly: AssemblyInformationalVersion("0.6.0")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 Spectre Systems AB")]
 

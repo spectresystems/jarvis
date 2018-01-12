@@ -9,7 +9,6 @@ using Autofac.Core;
 using Jarvis.Core.Diagnostics;
 using Jarvis.Infrastructure.Diagnostics;
 using Serilog;
-using Serilog.Core;
 
 #if !DEBUG || FAKERELEASE
 using Jarvis.Infrastructure.Utilities;
@@ -57,7 +56,7 @@ namespace Jarvis.Bootstrapping
             registration.Preparing += (sender, args) =>
             {
                 var serilogLogger = Log.ForContext(
-                    Constants.SourceContextPropertyName,
+                    Serilog.Core.Constants.SourceContextPropertyName,
                     registration.Activator.LimitType.Name);
                 IJarvisLog jarvisLogger = new SerilogLog(serilogLogger);
                 args.Parameters = new[] { TypedParameter.From(jarvisLogger) }.Concat(args.Parameters);
