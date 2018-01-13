@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5C9A1187-ADB4-4EA2-B955-DD19804057C3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Jarvis.Addin.StackExchange</RootNamespace>
+    <AssemblyName>Jarvis.Addin.StackExchange</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=4.6.2.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <HintPath>..\packages\Autofac.4.6.2\lib\net45\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AskUbuntu\AskUbuntuResult.cs" />
+    <Compile Include="Common\EpochDateTimeExtensions.cs" />
+    <Compile Include="Common\EpochJsonConverter.cs" />
+    <Compile Include="Common\QueryLanguage\IQueryParser.cs" />
+    <Compile Include="Common\QueryLanguage\QueryParser.cs" />
+    <Compile Include="Common\QueryLanguage\QueryParserExtensions.cs" />
+    <Compile Include="Common\QueryStringBuilder.cs" />
+    <Compile Include="Common\QuestionDescriptionFactory.cs" />
+    <Compile Include="Common\SearchQuery.cs" />
+    <Compile Include="Common\StackExchangeClient.cs" />
+    <Compile Include="Common\StackExchangeClientExtensions.cs" />
+    <Compile Include="Common\StackExchangeSites.cs" />
+    <Compile Include="Common\PaginationResult.cs" />
+    <Compile Include="Common\Question.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="AskUbuntu\AskUbuntuProvider.cs" />
+    <Compile Include="StackExchangeAddin.cs" />
+    <Compile Include="StackExchangeProvider.cs" />
+    <Compile Include="StackExchangeResult.cs" />
+    <Compile Include="StackOverflow\StackOverflowProvider.cs" />
+    <Compile Include="StackOverflow\StackOverflowResult.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Jarvis.Core\Jarvis.Core.csproj">
+      <Project>{5826d320-9026-4be9-8c82-893c55b80871}</Project>
+      <Name>Jarvis.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\StackOverflow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\AskUbuntu.png" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
