@@ -48,7 +48,7 @@ namespace Jarvis.Services
                 var tasks = providers.Select(async provider =>
                 {
                     IQueryResult[] result;
-                    using (_logger.TimedOperation(LogLevel.Verbose, "{providerName} query", provider.GetType().Name))
+                    using (_logger.TimedOperation(LogLevel.Verbose, "{providerName} sub query", provider.GetType().Name))
                     {
                         result = (await provider.QueryAsync(query)).ToArray();
                     }

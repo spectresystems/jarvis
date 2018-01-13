@@ -8,36 +8,15 @@ using System.Linq;
 
 namespace Jarvis.Core.Diagnostics
 {
-    public static class TimedOperationExtensions
-    {
-        public static Operation Timed(this IJarvisLog logger, string messageTemplate,
-            params object[] propertyValues)
-        {
-            return logger.Timed(LogLevel.Information, messageTemplate, propertyValues);
-        }
-
-        public static Operation Timed(this IJarvisLog logger, LogLevel level, string messageTemplate,
-            params object[] propertyValues)
-        {
-            return logger.Timed(level, level, messageTemplate, propertyValues);
-        }
-
-        public static Operation Timed(this IJarvisLog logger, LogLevel completionLevel, LogLevel cancelledLevel, string messageTemplate,
-            params object[] propertyValues)
-        {
-            return new Operation(logger, messageTemplate, propertyValues, completionLevel, cancelledLevel);
-        }
-    }
-
-    public class Operation : IDisposable
+    public sealed class Operation : IDisposable
     {
         private readonly IJarvisLog _logger;
         private readonly string _messageTemplate;
         private readonly object[] _propertyValues;
         private readonly long _startTime;
         private long _stopTime;
-        private Guid _operationId;
-        private IDisposable _operationScope;
+        private readonly Guid _operationId;
+        private readonly IDisposable _operationScope;
 
         public bool IsCompleted { get; private set; }
         public bool IsCancelled { get; private set; }
