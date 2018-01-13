@@ -61,7 +61,9 @@ namespace Jarvis
             }
 
             // Show the root view.
-            DisplayRootViewFor<ShellViewModel>();
+            Dictionary<string, object> window_settings = new Dictionary<string, object>();
+            window_settings.Add("Visibility", System.Windows.Visibility.Hidden);
+            DisplayRootViewFor<ShellViewModel>(window_settings);
             Application?.MainWindow?.Hide();
 
             // Create the taskbar icon.
