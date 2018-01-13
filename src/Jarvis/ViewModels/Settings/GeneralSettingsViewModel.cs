@@ -30,5 +30,9 @@ namespace Jarvis.ViewModels.Settings
             settings.Set(Constants.Settings.General.CheckForUpdates, CheckForUpdates);
             settings.Set(Constants.Settings.General.IncludePreviews, IncludePreviews);
         }
+
+        public void OnSaved()
+        {
+        }
     }
 }

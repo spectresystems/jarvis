@@ -111,6 +111,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">

@@ -6,16 +6,21 @@
              xmlns:cal="http://www.caliburnproject.org"
              xmlns:core="clr-namespace:Jarvis.Core;assembly=Jarvis.Core"
              WindowStartupLocation="CenterScreen"
-             mc:Ignorable="d" Width="500" Height="400" Title="Settings">
+             ResizeMode="NoResize"
+             mc:Ignorable="d" Width="800" Height="600" Title="Settings">
 
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
         <!-- The provider list -->
-        <ListBox x:Name="Items" Grid.Column="0" Margin="10,10,0,10" Background="{x:Static SystemColors.WindowBrush}">
+        <ListBox x:Name="Items" Grid.Column="0" Grid.Row="0" Margin="10,10,10,10" Background="{x:Static SystemColors.WindowBrush}">
             <cal:Message.Attach>[Event SelectionChanged] = [Action Toggle($this)]</cal:Message.Attach>
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="core:ISettings">
@@ -63,28 +68,20 @@
             </ListBox.ItemContainerStyle>
         </ListBox>
 
-        <Grid Margin="10,10,10,10" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="32" />
-            </Grid.RowDefinitions>
+        <!-- The configuration panel -->
+        <ContentControl Grid.Row="0" Grid.Column="1" x:Name="ActiveItem" Margin="0,10,10,10" />
 
-            <!-- The configuration panel -->
-            <ContentControl Grid.Row="0" x:Name="ActiveItem" Margin="5" />
-
-            <!-- The buttons -->
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-                <TextBlock x:Name="ValidationMessage" Grid.Column="0" TextWrapping="WrapWithOverflow" VerticalAlignment="Center" Foreground="Red" />
-                <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,5,0">
-                    <Button cal:Message.Attach="Close" Margin="5,0,0,0" Width="80" IsDefault="True">Close</Button>
-                    <Button cal:Message.Attach="Save" Margin="5,0,0,0" Width="80" IsDefault="True">Save</Button>
-                </StackPanel>
-            </Grid>
-
+        <!-- The buttons -->
+        <Grid Grid.Row="1" Grid.Column="1" Margin="10,0,10,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="ValidationMessage" Grid.Column="0" TextWrapping="WrapWithOverflow" VerticalAlignment="Center" Foreground="Red" />
+            <StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal" Margin="0,0,0,0">
+                <Button cal:Message.Attach="Close" Margin="5,0,0,0" Padding="10,3,10,3" IsDefault="True">Close</Button>
+                <Button cal:Message.Attach="Save" Margin="5,0,0,0" Padding="10,3,10,3" IsDefault="True">Save</Button>
+            </StackPanel>
         </Grid>
     </Grid>
 

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Caliburn.Micro;
+using Jarvis.Bootstrapping.Seeding;
 using Jarvis.Core;
 using Jarvis.Core.Threading;
 using Jarvis.Services;
@@ -61,16 +62,23 @@ namespace Jarvis.Bootstrapping
             builder.RegisterType<JarvisTaskbarIcon>().SingleInstance();
             builder.RegisterType<TaskbarIconViewModel>().InstancePerDependency();
 
-            // View models
-            builder.RegisterAssemblyTypes(typeof(ShellViewModel).Assembly)
-                .Where(type => type.Name.EndsWith("ViewModel", StringComparison.Ordinal))
-                .Where(type => type.GetInterface(typeof(INotifyPropertyChanged).Name) != null)
-                .AsSelf().InstancePerDependency();
+            // Seeders
+            builder.RegisterType<GeneralSettingsSeeder>().As<ISettingsSeeder>().SingleInstance();
 
-            // Register Views
-            builder.RegisterAssemblyTypes(typeof(ShellViewModel).Assembly)
-                .Where(type => type.Name.EndsWith("View", StringComparison.Ordinal))
-                .AsSelf().InstancePerDependency();
+            // Register view models and views.
+            foreach (var assembly in _assemblies.Concat(new[] { typeof(JarvisModule).Assembly }))
+            {
+                // View models
+                builder.RegisterAssemblyTypes(assembly)
+                    .Where(type => type.Name.EndsWith("ViewModel", StringComparison.Ordinal))
+                    .Where(type => type.GetInterface(typeof(INotifyPropertyChanged).Name) != null)
+                    .AsSelf().InstancePerDependency();
+
+                // Register Views
+                builder.RegisterAssemblyTypes(assembly)
+                    .Where(type => type.Name.EndsWith("View", StringComparison.Ordinal))
+                    .AsSelf().InstancePerDependency();
+            }
 
             // Load addins.
             LoadAddins(builder);
@@ -84,6 +92,12 @@ namespace Jarvis.Bootstrapping
                 foreach (var module in GetModulesInAssembly(assembly))
                 {
                     module.Configure(builder);
+                }
+
+                // Make sure Caliburn.Micro can find external views.
+                if (!AssemblySource.Instance.Contains(assembly))
+                {
+                    AssemblySource.Instance.Add(assembly);
                 }
             }
         }

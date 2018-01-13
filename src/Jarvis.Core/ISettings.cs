@@ -11,7 +11,10 @@ namespace Jarvis.Core
         string Name { get; }
 
         ValidationResult Validate();
+
         void Load(ISettingsStore settings);
         void Save(ISettingsStore settings);
+
+        void OnSaved();
     }
 }

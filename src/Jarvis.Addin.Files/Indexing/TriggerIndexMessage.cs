@@ -2,12 +2,9 @@
 // Spectre Systems AB licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace Jarvis.Core
+namespace Jarvis.Addin.Files.Indexing
 {
-    public interface ISettingsStore
+    internal sealed class TriggerIndexMessage
     {
-        bool Exist(string key);
-        string Get(string key);
-        void Set(string key, string value);
     }
 }
