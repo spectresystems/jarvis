@@ -69,11 +69,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Diagnostics\DebugLog.cs" />
     <Compile Include="Diagnostics\IJarvisLog.cs" />
-    <Compile Include="Diagnostics\LogDecorator.cs" />
     <Compile Include="Diagnostics\LogExtensions.cs" />
     <Compile Include="Diagnostics\LogLevel.cs" />
+    <Compile Include="Diagnostics\LogProperties.cs" />
+    <Compile Include="Diagnostics\TimedOperationExtensions.cs" />
     <Compile Include="Ensure.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\SettingStoreExtensions.cs" />

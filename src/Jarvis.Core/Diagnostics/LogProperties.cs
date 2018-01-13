@@ -4,14 +4,8 @@
 
 namespace Jarvis.Core.Diagnostics
 {
-    public enum LogLevel
+    public class LogProperties
     {
-        Fatal = 0,
-        Error = 1,
-        Warning = 2,
-        Information = 3,
-        Verbose = 4,
-        Debug = 5,
-        Silent = 6
+        public const string QueryId = "queryId";
     }
 }

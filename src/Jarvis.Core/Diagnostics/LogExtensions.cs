@@ -8,74 +8,64 @@ namespace Jarvis.Core.Diagnostics
 {
     public static class LogExtensions
     {
-        public static void Fatal(this IJarvisLog log, string message)
+        public static void Fatal(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Fatal, $"{message}");
+            log?.Write(LogLevel.Fatal, null, messageTemplate, propertyValues);
         }
 
-        public static void Fatal(this IJarvisLog log, FormattableString message)
+        public static void Fatal(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Fatal, message);
+            log?.Write(LogLevel.Fatal, exception, messageTemplate, propertyValues);
         }
 
-        public static void Error(this IJarvisLog log, string message)
+        public static void Error(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Error, $"{message}");
+            log?.Write(LogLevel.Error, null, messageTemplate, propertyValues);
         }
 
-        public static void Error(this IJarvisLog log, Exception exception, string message)
+        public static void Error(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.WriteError(exception, $"{message}");
+            log?.Write(LogLevel.Error, exception, messageTemplate, propertyValues);
         }
 
-        public static void Error(this IJarvisLog log, FormattableString message)
+        public static void Warning(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Error, message);
+            log?.Write(LogLevel.Warning, null, messageTemplate, propertyValues);
         }
 
-        public static void Error(this IJarvisLog log, Exception exception, FormattableString message)
+        public static void Warning(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.WriteError(exception, message);
+            log?.Write(LogLevel.Warning, exception, messageTemplate, propertyValues);
         }
 
-        public static void Warning(this IJarvisLog log, string message)
+        public static void Information(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Warning, $"{message}");
+            log?.Write(LogLevel.Information, null, messageTemplate, propertyValues);
         }
 
-        public static void Warning(this IJarvisLog log, FormattableString message)
+        public static void Information(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Warning, message);
+            log?.Write(LogLevel.Information, exception, messageTemplate, propertyValues);
         }
 
-        public static void Information(this IJarvisLog log, string message)
+        public static void Debug(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Information, $"{message}");
+            log?.Write(LogLevel.Debug, null, messageTemplate, propertyValues);
         }
 
-        public static void Information(this IJarvisLog log, FormattableString message)
+        public static void Debug(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Information, message);
+            log?.Write(LogLevel.Debug, exception, messageTemplate, propertyValues);
         }
 
-        public static void Debug(this IJarvisLog log, string message)
+        public static void Verbose(this IJarvisLog log, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Debug, $"{message}");
+            log?.Write(LogLevel.Debug, null, messageTemplate, propertyValues);
         }
 
-        public static void Debug(this IJarvisLog log, FormattableString message)
+        public static void Verbose(this IJarvisLog log, Exception exception, string messageTemplate, params object[] propertyValues)
         {
-            log?.Write(LogLevel.Debug, message);
-        }
-
-        public static void Verbose(this IJarvisLog log, string message)
-        {
-            log?.Write(LogLevel.Verbose, $"{message}");
-        }
-
-        public static void Verbose(this IJarvisLog log, FormattableString message)
-        {
-            log?.Write(LogLevel.Verbose, message);
+            log?.Write(LogLevel.Debug, exception, messageTemplate, propertyValues);
         }
     }
 }
