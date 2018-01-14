@@ -3,6 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Jarvis.Services.Updating
@@ -24,14 +26,21 @@ namespace Jarvis.Services.Updating
         [JsonProperty("html_url")]
         public string HtmlUrl { get; set; }
 
+        [JsonProperty("assets")]
+        public List<GitHubReleaseAsset> Assets { get; set; }
+
         public JarvisUpdateInfo ToJarvisUpdateInfo(Version currentVersion)
         {
+            var installer = Assets.FirstOrDefault(x => x.DownloadUrl?.EndsWith(".exe") ?? false);
+
             return new JarvisUpdateInfo
             {
                 CurrentVersion = currentVersion,
                 FutureVersion = Version.Parse(Name.Trim('v')),
-                Uri = new Uri(HtmlUrl),
-                Prerelease = Prerelease
+                ReleaseUri = new Uri(HtmlUrl),
+                Prerelease = Prerelease,
+                InstallerName = installer?.FileName,
+                InstallerUri = installer?.DownloadUrl != null ? new Uri(installer.DownloadUrl) : null
             };
         }
     }

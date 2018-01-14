@@ -38,11 +38,15 @@ namespace Jarvis
             // Configure container.
             var builder = new ContainerBuilder();
             builder.RegisterInstance(Application).As<JarvisApplication>();
-            builder.RegisterModule(new JarvisModule(
+            builder.RegisterModule(new JarvisModule());
+            builder.RegisterModule<UpdaterModule>();
+            builder.RegisterModule<LoggingModule>();
+
+            // Configure addins.
+            builder.RegisterModule(new AddinModule(
                 typeof(FileAddin).Assembly,
                 typeof(GoogleAddin).Assembly,
                 typeof(WikipediaAddin).Assembly));
-            builder.RegisterModule<LoggingModule>();
 
             // Build the container.
             _container = builder.Build();

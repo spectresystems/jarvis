@@ -3,12 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Topmost="True"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
-        SizeToContent="WidthAndHeight" 
-        Title="Update available">
+        SizeToContent="WidthAndHeight" Width="300" 
+        Title="Update available" d:DataContext="{d:DesignData UpdateViewModel}">
 
     <Grid Margin="15">
         <Grid.ColumnDefinitions>
@@ -17,14 +19,44 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
             <TextBlock Margin="0,0,5,0">A new version of Jarvis is available:</TextBlock>
-            <TextBlock x:Name="Version" FontWeight="Bold" />
+            <TextBlock x:Name="Version" Foreground="Blue" Cursor="Hand">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseLeftButtonDown">
+                        <cal:ActionMessage MethodName="OpenBrowser" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                <TextBlock.Style>
+                    <Style>
+                        <Setter Property="TextBlock.TextDecorations" Value="Underline" />
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button x:Name="OpenBrowser" IsDefault="True" Padding="5" Content="Open in browser..." Margin="0,0,10,0" />
-            <Button x:Name="CloseDialog" Padding="5" Content="Skip for now" />
+        <Grid Grid.Row="1">
+            <Grid.Style>
+                <Style TargetType="Grid">
+                    <Setter Property="Visibility" Value="Hidden"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding IsInstalling}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Grid.Style>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Margin="0,0,10,0">Downloading...</TextBlock>
+            <ProgressBar Grid.Column="1" IsIndeterminate="True" />
+        </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button x:Name="Install" Padding="5,2,5,2" Content="Install update" Margin="0,0,10,0" />
+            <Button x:Name="CloseDialog" Padding="5,2,5,2" Content="Skip for now" />
         </StackPanel>
     </Grid>
 </Window>

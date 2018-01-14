@@ -11,6 +11,8 @@ namespace Jarvis.Services.Updating
         public Version CurrentVersion { get; set; }
         public Version FutureVersion { get; set; }
         public bool Prerelease { get; set; }
-        public Uri Uri { get; set; }
+        public Uri ReleaseUri { get; set; }
+        public string InstallerName { get; set; }
+        public Uri InstallerUri { get; set; }
     }
 }
