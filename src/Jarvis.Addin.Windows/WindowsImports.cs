@@ -12,7 +12,7 @@ namespace Jarvis.Addin.Windows
     public class WindowsImports
     {
         private static uint WM_GETICON = 0x007f;
-        private static IntPtr ICON_SMALL2 = new IntPtr(2);
+        private static IntPtr ICON_BIG = new IntPtr(0);
         private static int GCL_HICON = -14;
         private static int SW_RESTORE = 9;
 
@@ -70,7 +70,7 @@ namespace Jarvis.Addin.Windows
             {
                 IntPtr hIcon = default(IntPtr);
 
-                hIcon = SendMessage(hWnd, WM_GETICON, ICON_SMALL2, IntPtr.Zero);
+                hIcon = SendMessage(hWnd, WM_GETICON, ICON_BIG, IntPtr.Zero);
 
                 if (hIcon == IntPtr.Zero)
                     hIcon = GetClassLongPtr(hWnd, GCL_HICON);
