@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Jarvis.Core.Interop
 {
-    public static class Kernel32
+    public static partial class Win32
     {
         [DllImport("kernel32.dll")]
         public static extern IntPtr OpenProcess(int access, bool inherit, int proccessId);

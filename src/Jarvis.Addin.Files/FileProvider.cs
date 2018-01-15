@@ -67,8 +67,8 @@ namespace Jarvis.Addin.Files
                         {
                             var processPath = new StringBuilder(1024);
                             var size = processPath.Capacity;
-                            var processHandle = Kernel32.OpenProcess(0x1000, false, process.Id);
-                            Kernel32.QueryFullProcessImageName(processHandle, 0, processPath, out size);
+                            var processHandle = Win32.OpenProcess(0x1000, false, process.Id);
+                            Win32.QueryFullProcessImageName(processHandle, 0, processPath, out size);
                             return processPath.ToString() == descriptionPath;
                         });
                     
