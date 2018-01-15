@@ -10,6 +10,7 @@ using Caliburn.Micro;
 using Jarvis.Addin.Files;
 using Jarvis.Addin.Google;
 using Jarvis.Addin.Wikipedia;
+using Jarvis.Addin.Windows;
 using Jarvis.Bootstrapping;
 using Jarvis.Core;
 using Jarvis.Infrastructure.Utilities;
@@ -43,10 +44,12 @@ namespace Jarvis
             builder.RegisterModule<LoggingModule>();
 
             // Configure addins.
+            // TODO use some dependency injection to load all dynamicly
             builder.RegisterModule(new AddinModule(
                 typeof(FileAddin).Assembly,
                 typeof(GoogleAddin).Assembly,
-                typeof(WikipediaAddin).Assembly));
+                typeof(WikipediaAddin).Assembly,
+                typeof(WindowsAddin).Assembly));
 
             // Build the container.
             _container = builder.Build();
