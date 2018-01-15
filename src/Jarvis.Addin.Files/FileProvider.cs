@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -14,8 +15,11 @@ using Jarvis.Addin.Files.Icons;
 using Jarvis.Addin.Files.Indexing;
 using Jarvis.Addin.Files.ViewModels;
 using Jarvis.Core;
+using Jarvis.Core.Interop;
 using JetBrains.Annotations;
+using Spectre.System.IO;
 using static Jarvis.Addin.Files.Sources.Uwp.ShellInterop;
+using Path = System.IO.Path;
 
 namespace Jarvis.Addin.Files
 {
@@ -56,7 +60,33 @@ namespace Jarvis.Addin.Files
 
                 if (result.Path.Scheme == "shell")
                 {
-                    Process.Start(path);
+                    var descriptionPath = result.Description.Replace("/", "\\");
+                    var existingProcess = Process
+                        .GetProcesses()
+                        .FirstOrDefault(process =>
+                        {
+                            var processPath = new StringBuilder(1024);
+                            var size = processPath.Capacity;
+                            var processHandle = Kernel32.OpenProcess(0x1000, false, process.Id);
+                            Kernel32.QueryFullProcessImageName(processHandle, 0, processPath, out size);
+                            return processPath.ToString() == descriptionPath;
+                        });
+                    
+                    if (existingProcess != null)
+                    {
+                        Win32.SetForegroundWindow(existingProcess.MainWindowHandle);
+                        
+                        var rect = new Win32.W32Rect();
+                        Win32.GetWindowRect(existingProcess.MainWindowHandle, ref rect);
+                        if (rect.Top < 0 && rect.Right < 0 && rect.Bottom < 0 && rect.Left < 0) // Window is minimized
+                        {
+                            Win32.ShowWindow(existingProcess.MainWindowHandle, 1);
+                        }
+                    }
+                    else
+                    {
+                        Process.Start(path);
+                    }
                 }
                 else if (result.Path.Scheme == "uwp")
                 {

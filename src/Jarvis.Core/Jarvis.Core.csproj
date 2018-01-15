@@ -80,6 +80,7 @@
     <Compile Include="Extensions\SettingStoreExtensions.cs" />
     <Compile Include="IAddin.cs" />
     <Compile Include="IInitializable.cs" />
+    <Compile Include="Interop\Kernel32.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Interop\Win32.Shell.cs" />
     <Compile Include="Interop\Win32.Common.cs" />
