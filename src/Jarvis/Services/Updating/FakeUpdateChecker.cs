@@ -48,7 +48,9 @@ namespace Jarvis.Services.Updating
                 CurrentVersion = _currentVersion,
                 FutureVersion = _futureVersion,
                 Prerelease = false,
-                Uri = new Uri("https://github.com/cake-build/cake/releases/tag/v0.23.0")
+                ReleaseUri = new Uri("https://github.com/spectresystems/jarvis/releases/tag/v0.6.0"),
+                InstallerName = "Jarvis-0.6.0-x64.exe",
+                InstallerUri = new Uri("https://github.com/spectresystems/jarvis/releases/download/v0.6.0/Jarvis-0.6.0-x64.exe")
             };
         }
     }

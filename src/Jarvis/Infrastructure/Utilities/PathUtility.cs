@@ -11,6 +11,7 @@ namespace Jarvis.Infrastructure.Utilities
     {
         public static DirectoryPath DataPath { get; set; }
         public static DirectoryPath LogPath { get; set; }
+        public static DirectoryPath InstallerPath { get; set; }
 
         public static void Initialize()
         {
@@ -18,10 +19,12 @@ namespace Jarvis.Infrastructure.Utilities
                 .Combine(new DirectoryPath("Jarvis"));
 
             LogPath = DataPath.Combine(new DirectoryPath("Logs"));
+            InstallerPath = DataPath.Combine(new DirectoryPath("Installers"));
 
             var fileSystem = new FileSystem();
             CreatePath(fileSystem, DataPath);
             CreatePath(fileSystem, LogPath);
+            CreatePath(fileSystem, InstallerPath);
         }
 
         private static void CreatePath(IFileSystem fileSystem, DirectoryPath path)
