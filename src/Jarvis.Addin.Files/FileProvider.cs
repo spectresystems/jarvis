@@ -11,8 +11,10 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Jarvis.Addin.Files.Extensions;
 using Jarvis.Addin.Files.Icons;
 using Jarvis.Addin.Files.Indexing;
+using Jarvis.Addin.Files.Sources;
 using Jarvis.Addin.Files.ViewModels;
 using Jarvis.Core;
 using Jarvis.Core.Interop;
@@ -60,7 +62,10 @@ namespace Jarvis.Addin.Files
 
                 if (result.Path.Scheme == "shell")
                 {
-                    var descriptionPath = result.Description.Replace("/", "\\");
+                    if (path.EndsWith("lnk") && result.OriginalEntry is StartMenuIndexSourceEntry startMenuEntry)
+                    {
+                        path = WebUtility.UrlDecode(startMenuEntry.TargetPath.ToUri("shell").AbsolutePath).TrimStart('/');
+                    }
                     var existingProcess = Process
                         .GetProcesses()
                         .FirstOrDefault(process =>
@@ -69,7 +74,7 @@ namespace Jarvis.Addin.Files
                             var size = processPath.Capacity;
                             var processHandle = Win32.OpenProcess(0x1000, false, process.Id);
                             Win32.QueryFullProcessImageName(processHandle, 0, processPath, out size);
-                            return processPath.ToString() == descriptionPath;
+                            return processPath.ToString() == path;
                         });
                     
                     if (existingProcess != null)
