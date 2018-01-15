@@ -65,9 +65,8 @@ namespace Jarvis
             }
 
             // Show the root view.
-            Dictionary<string, object> window_settings = new Dictionary<string, object>();
-            window_settings.Add("Visibility", System.Windows.Visibility.Hidden);
-            DisplayRootViewFor<ShellViewModel>(window_settings);
+            var windowSettings = new Dictionary<string, object> { { "Visibility", Visibility.Hidden } };
+            DisplayRootViewFor<ShellViewModel>(windowSettings);
             Application?.MainWindow?.Hide();
 
             // Create the taskbar icon.
@@ -78,7 +77,7 @@ namespace Jarvis
 
             // Register the hotkey.
             var service = IoC.Get<ApplicationService>();
-            _hotKey = new HotKey(() => service.Toggle());
+            _hotKey = new KeyboardHook(() => service.Toggle());
         }
 
         protected override void OnExit(object sender, EventArgs e)

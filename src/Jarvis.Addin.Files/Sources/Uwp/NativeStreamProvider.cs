@@ -13,8 +13,8 @@ namespace Jarvis.Addin.Files.Sources.Uwp
     {
         public IStream GetStream(FilePath path)
         {
-            const Win32.Stgm exclusiveRead = Win32.Stgm.Read | Win32.Stgm.ShareExclusive;
-            var hResult = Win32.SHCreateStreamOnFileEx(path.FullPath, exclusiveRead, 0x80, false, null, out var stream);
+            const Win32.Shell.Stgm exclusiveRead = Win32.Shell.Stgm.Read | Win32.Shell.Stgm.ShareExclusive;
+            var hResult = Win32.Shell.SHCreateStreamOnFileEx(path.FullPath, exclusiveRead, 0x80, false, null, out var stream);
             return hResult != Win32.Hresult.Ok ? null : stream;
         }
 

@@ -80,7 +80,7 @@ namespace Jarvis.Tests.Utilities
 
             if (_stream.CanRead)
             {
-                pstatstg.grfMode |= (int)Win32.Stgm.Read;
+                pstatstg.grfMode |= (int)Win32.Shell.Stgm.Read;
             }
         }
 

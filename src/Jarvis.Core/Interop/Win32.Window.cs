@@ -9,10 +9,13 @@ namespace Jarvis.Core.Interop
 {
     public static partial class Win32
     {
-        [DllImport("user32.dll")]
-        public static extern IntPtr GetForegroundWindow();
+        public static class Window
+        {
+            [DllImport("user32.dll")]
+            public static extern IntPtr GetForegroundWindow();
 
-        [DllImport("user32.dll")]
-        public static extern bool GetWindowRect(IntPtr hwnd, ref W32Rect rectangle);
+            [DllImport("user32.dll")]
+            public static extern bool GetWindowRect(IntPtr hwnd, ref W32Rect rectangle);
+        }
     }
 }
