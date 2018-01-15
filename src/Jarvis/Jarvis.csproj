@@ -237,6 +237,10 @@
       <Project>{cbb05832-5634-4611-ada1-e3793c5765d6}</Project>
       <Name>Jarvis.Addin.Wikipedia</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Jarvis.Addin.Windows\Jarvis.Addin.Windows.csproj">
+      <Project>{5e693056-a1ed-4434-9181-20632f0a300a}</Project>
+      <Name>Jarvis.Addin.Windows</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jarvis.Core\Jarvis.Core.csproj">
       <Project>{5826d320-9026-4be9-8c82-893c55b80871}</Project>
       <Name>Jarvis.Core</Name>
