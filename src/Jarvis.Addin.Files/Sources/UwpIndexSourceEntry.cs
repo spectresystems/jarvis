@@ -26,7 +26,8 @@ namespace Jarvis.Addin.Files.Sources
             return new FileResult(
                 QueryResultType.Application,
                 new Uri($"uwp:///{WebUtility.UrlEncode(Id)}?aumid={WebUtility.UrlEncode(AppUserModelId)}"), Icon,
-                Title, Description, distance, score);
+                Title, Description, distance, score,
+                this);
         }
 
         protected override int GetEntryHashCode()

@@ -42,7 +42,8 @@ namespace Jarvis.Addin.Files.Sources
             return new FileResult(
                 IsDirectory ? QueryResultType.Folder : QueryResultType.File,
                 Path.ToUri("shell"),
-                Icon, Title, Description, distance, score);
+                Icon, Title, Description, distance, score,
+                this);
         }
 
         protected override int GetEntryHashCode()

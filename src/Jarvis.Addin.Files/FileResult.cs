@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using Jarvis.Addin.Files.Indexing;
 using Jarvis.Core;
 
 namespace Jarvis.Addin.Files
@@ -18,9 +19,10 @@ namespace Jarvis.Addin.Files
         public string Description { get; }
         public float Distance { get; }
         public float Score { get; }
+        public IndexedEntry OriginalEntry { get; }
 
         public FileResult(QueryResultType type, Uri path, Uri icon,
-            string title, string description, float distance, float score)
+            string title, string description, float distance, float score, IndexedEntry originalEntry)
         {
             Type = type;
             Path = path;
@@ -29,6 +31,7 @@ namespace Jarvis.Addin.Files
             Description = description;
             Distance = distance;
             Score = score;
+            OriginalEntry = originalEntry;
         }
 
         public override bool Equals(object obj)

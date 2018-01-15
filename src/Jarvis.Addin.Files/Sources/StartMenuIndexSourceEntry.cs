@@ -30,7 +30,8 @@ namespace Jarvis.Addin.Files.Sources
                 QueryResultType.Application,
                 Path.ToUri("shell"),
                 Icon,
-                Title, Description, distance, score);
+                Title, Description, distance, score,
+                this);
         }
 
         protected override int GetEntryHashCode()
