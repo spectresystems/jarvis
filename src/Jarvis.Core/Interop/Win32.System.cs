@@ -8,12 +8,15 @@ namespace Jarvis.Core.Interop
 {
     public static partial class Win32
     {
-        public enum W32SystemMetric : uint
+        public static class System
         {
-            ShuttingDown = 0x2000
-        }
+            public enum W32SystemMetric : uint
+            {
+                ShuttingDown = 0x2000
+            }
 
-        [DllImport("user32.dll")]
-        public static extern int GetSystemMetrics(W32SystemMetric metric);
+            [DllImport("user32.dll")]
+            public static extern int GetSystemMetrics(W32SystemMetric metric);
+        }
     }
 }

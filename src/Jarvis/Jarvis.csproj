@@ -115,6 +115,7 @@
     <Compile Include="Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
     <Compile Include="Bootstrapping\UpdaterModule.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Infrastructure\Utilities\KeyboardHook.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">
       <DependentUpon>IconControl.xaml</DependentUpon>
@@ -123,7 +124,6 @@
     <Compile Include="Infrastructure\Presentation\Converters\DateTimeConverter.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\Diagnostics\SerilogLog.cs" />
-    <Compile Include="Infrastructure\Utilities\HotKey.cs" />
     <Compile Include="Infrastructure\Utilities\PathUtility.cs" />
     <Compile Include="Infrastructure\Utilities\WindowUtility.cs" />
     <Compile Include="JarvisApplication.xaml.cs">

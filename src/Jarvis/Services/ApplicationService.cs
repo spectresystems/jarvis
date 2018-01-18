@@ -24,7 +24,7 @@ namespace Jarvis.Services
 
         public bool IsWindowsShuttingDown()
         {
-            return Win32.GetSystemMetrics(Win32.W32SystemMetric.ShuttingDown) != 0;
+            return Win32.System.GetSystemMetrics(Win32.System.W32SystemMetric.ShuttingDown) != 0;
         }
 
         public void Quit()

@@ -80,10 +80,10 @@
     <Compile Include="Extensions\SettingStoreExtensions.cs" />
     <Compile Include="IAddin.cs" />
     <Compile Include="IInitializable.cs" />
+    <Compile Include="Interop\Win32.Keyboard.cs" />
+    <Compile Include="Interop\Win32.Process.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Interop\Win32.Shell.cs" />
-    <Compile Include="Interop\Win32.Common.cs" />
-    <Compile Include="Interop\Win32.HotKey.cs" />
     <Compile Include="Interop\Win32.Monitor.cs" />
     <Compile Include="Interop\Win32.Primitives.cs" />
     <Compile Include="Interop\Win32.System.cs" />

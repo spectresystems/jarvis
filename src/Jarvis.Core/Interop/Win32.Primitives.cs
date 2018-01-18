@@ -9,6 +9,11 @@ namespace Jarvis.Core.Interop
 {
     public static partial class Win32
     {
+        public enum Hresult : uint
+        {
+            Ok = 0x0000,
+        }
+
         [StructLayout(LayoutKind.Sequential)]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
         public struct W32Point

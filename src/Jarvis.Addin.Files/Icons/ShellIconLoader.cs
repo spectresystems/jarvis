@@ -17,8 +17,8 @@ namespace Jarvis.Addin.Files.Icons
 {
     internal static class ShellIconLoader
     {
-        private const Win32.Shgfi Flags =
-            Win32.Shgfi.Icon | Win32.Shgfi.LargeIcon | Win32.Shgfi.UseFileAttributes;
+        private const Win32.Shell.Shgfi Flags =
+            Win32.Shell.Shgfi.Icon | Win32.Shell.Shgfi.LargeIcon | Win32.Shell.Shgfi.UseFileAttributes;
 
         public static async Task<ImageSource> LoadImageAsync(string path, bool isDirectory)
         {
@@ -58,9 +58,9 @@ namespace Jarvis.Addin.Files.Icons
                 return null;
             }
 
-            var info = default(Win32.Shfileinfo);
-            Win32.SHGetFileInfo(path,
-                isDirectory ? Win32.FileAttribute.Directory : Win32.FileAttribute.Normal,
+            var info = default(Win32.Shell.Shfileinfo);
+            Win32.Shell.SHGetFileInfo(path,
+                isDirectory ? Win32.Shell.FileAttribute.Directory : Win32.Shell.FileAttribute.Normal,
                 out info, (uint)Marshal.SizeOf(info), Flags);
 
             var iconHandle = info.hIcon;
@@ -82,7 +82,7 @@ namespace Jarvis.Addin.Files.Icons
             }
             finally
             {
-                Win32.DestroyIcon(iconHandle);
+                Win32.Shell.DestroyIcon(iconHandle);
             }
         }
     }
