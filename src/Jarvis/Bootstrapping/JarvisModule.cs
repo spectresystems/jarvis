@@ -3,16 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Reflection;
 using Autofac;
 using Caliburn.Micro;
+using Jarvis.Bootstrapping.Seeding;
 using Jarvis.Core;
 using Jarvis.Core.Threading;
 using Jarvis.Services;
-using Jarvis.Services.Updating;
 using Jarvis.ViewModels;
 using Spectre.System.IO;
 using Module = Autofac.Module;
@@ -21,13 +18,6 @@ namespace Jarvis.Bootstrapping
 {
     public sealed class JarvisModule : Module
     {
-        private readonly Assembly[] _assemblies;
-
-        public JarvisModule(params Assembly[] assemblies)
-        {
-            _assemblies = assemblies;
-        }
-
         protected override void Load(ContainerBuilder builder)
         {
             // Caliburn.Micro
@@ -41,16 +31,6 @@ namespace Jarvis.Bootstrapping
             builder.RegisterType<ServiceOrchestrator>().SingleInstance();
             builder.RegisterType<UpdateService>().As<IBackgroundWorker>().SingleInstance();
 
-#if !DEBUG || FAKERELEASE
-            builder.RegisterType<UpdateChecker>().As<IUpdateChecker>().SingleInstance();
-#else
-#if HAS_UPDATE
-            builder.RegisterType<FakeUpdateChecker.WithUpdate>().As<IUpdateChecker>().SingleInstance();
-#else
-            builder.RegisterType<FakeUpdateChecker.WithoutUpdate>().As<IUpdateChecker>().SingleInstance();
-#endif
-#endif
-
             // Services
             builder.RegisterType<QueryProviderService>().SingleInstance();
             builder.RegisterType<ApplicationService>().SingleInstance();
@@ -61,50 +41,19 @@ namespace Jarvis.Bootstrapping
             builder.RegisterType<JarvisTaskbarIcon>().SingleInstance();
             builder.RegisterType<TaskbarIconViewModel>().InstancePerDependency();
 
+            // Seeders
+            builder.RegisterType<GeneralSettingsSeeder>().As<ISettingsSeeder>().SingleInstance();
+
             // View models
-            builder.RegisterAssemblyTypes(typeof(ShellViewModel).Assembly)
+            builder.RegisterAssemblyTypes(typeof(JarvisModule).Assembly)
                 .Where(type => type.Name.EndsWith("ViewModel", StringComparison.Ordinal))
                 .Where(type => type.GetInterface(typeof(INotifyPropertyChanged).Name) != null)
                 .AsSelf().InstancePerDependency();
 
             // Register Views
-            builder.RegisterAssemblyTypes(typeof(ShellViewModel).Assembly)
+            builder.RegisterAssemblyTypes(typeof(JarvisModule).Assembly)
                 .Where(type => type.Name.EndsWith("View", StringComparison.Ordinal))
                 .AsSelf().InstancePerDependency();
-
-            // Load addins.
-            LoadAddins(builder);
-        }
-
-        private void LoadAddins(ContainerBuilder builder)
-        {
-            var assemblies = new HashSet<Assembly>(AppDomain.CurrentDomain.GetAssemblies().Concat(_assemblies));
-            foreach (var assembly in assemblies)
-            {
-                foreach (var module in GetModulesInAssembly(assembly))
-                {
-                    module.Configure(builder);
-                }
-            }
-        }
-
-        private static IEnumerable<IAddin> GetModulesInAssembly(Assembly assembly)
-        {
-            foreach (var attribute in assembly.GetCustomAttributes<AddinAttribute>())
-            {
-                if (!typeof(IAddin).IsAssignableFrom(attribute.ModuleType))
-                {
-                    continue;
-                }
-
-                var defaultConstructor = attribute.ModuleType.GetConstructor(Type.EmptyTypes);
-                if (defaultConstructor == null)
-                {
-                    throw new InvalidOperationException("Could not find default constructor.");
-                }
-
-                yield return Activator.CreateInstance(attribute.ModuleType) as IAddin;
-            }
         }
     }
 }

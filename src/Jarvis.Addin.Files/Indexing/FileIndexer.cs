@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Caliburn.Micro;
 using Jarvis.Addin.Files.Collections;
 using Jarvis.Core;
 using Jarvis.Core.Diagnostics;
@@ -19,25 +20,29 @@ using Spectre.System.IO;
 namespace Jarvis.Addin.Files.Indexing
 {
     [UsedImplicitly]
-    internal sealed class FileIndexer : IBackgroundWorker, IFileIndex
+    internal sealed class FileIndexer : IBackgroundWorker, IFileIndex, IHandle<TriggerIndexMessage>
     {
         private readonly IJarvisLog _log;
         private readonly List<IFileIndexSource> _sources;
         private readonly HashSet<string> _stopWords;
         private readonly ScoreComparer _comparer;
         private readonly IndexedEntryComparer _entryComparer;
+        private readonly ManualResetEvent _trigger;
 
         private Trie<IndexedEntry> _trie;
 
         public string Name => "File indexing service";
 
-        public FileIndexer(IEnumerable<IFileIndexSource> sources, IJarvisLog log)
+        public FileIndexer(IEventAggregator events, IEnumerable<IFileIndexSource> sources, IJarvisLog log)
         {
             _log = new LogDecorator("FileIndexer", log);
             _sources = new List<IFileIndexSource>(sources ?? Array.Empty<IFileIndexSource>());
             _stopWords = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "to", "the" };
             _comparer = new ScoreComparer();
             _entryComparer = new IndexedEntryComparer();
+            _trigger = new ManualResetEvent(false);
+
+            events.Subscribe(this);
         }
 
         public Task<bool> Run(CancellationToken token)
@@ -46,8 +51,8 @@ namespace Jarvis.Addin.Files.Indexing
             {
                 while (true)
                 {
-                    var st = new Stopwatch();
-                    st.Start();
+                    var indexingWatch = new Stopwatch();
+                    indexingWatch.Start();
 
                     var result = LoadResults(token);
 
@@ -57,8 +62,8 @@ namespace Jarvis.Addin.Files.Indexing
                     }
 
                     _log.Debug("Updating index...");
-                    var st2 = new Stopwatch();
-                    st2.Start();
+                    var indexUpdateWatch = new Stopwatch();
+                    indexUpdateWatch.Start();
 
                     var trie = new Trie<IndexedEntry>();
                     foreach (var file in result)
@@ -86,8 +91,8 @@ namespace Jarvis.Addin.Files.Indexing
                         }
                     }
 
-                    st2.Stop();
-                    _log.Debug($"Building trie took {st2.ElapsedMilliseconds}ms");
+                    indexUpdateWatch.Stop();
+                    _log.Debug($"Building trie took {indexUpdateWatch.ElapsedMilliseconds}ms");
 
                     _log.Debug("Writing index...");
                     Interlocked.Exchange(ref _trie, trie);
@@ -95,22 +100,30 @@ namespace Jarvis.Addin.Files.Indexing
                     _log.Verbose($"Nodes: {_trie.NodeCount}");
                     _log.Verbose($"Items: {_trie.ItemCount}");
 
-                    // Wait for a minute.
-                    st.Stop();
-                    _log.Debug($"Indexing done. Took {st.ElapsedMilliseconds}ms");
+                    indexingWatch.Stop();
+                    _log.Debug($"Indexing done. Took {indexingWatch.ElapsedMilliseconds}ms");
 
-                    if (token.WaitHandle.WaitOne((int)TimeSpan.FromMinutes(5).TotalMilliseconds))
+                    // Wait for a while.
+                    var index = WaitHandle.WaitAny(new[] { token.WaitHandle, _trigger }, (int)TimeSpan.FromMinutes(5).TotalMilliseconds);
+                    if (index == 0)
                     {
                         _log.Information("We were instructed to stop (2).");
                         break;
                     }
+
+                    // Triggered update?
+                    if (index == 1)
+                    {
+                        _log.Information("A re-index was triggered.");
+                        _trigger.Reset();
+                    }
                 }
 
                 return true;
-            });
+            }, token);
         }
 
-        private List<IndexedEntry> LoadResults(CancellationToken token)
+        private IEnumerable<IndexedEntry> LoadResults(CancellationToken token)
         {
             // Ask all sources for files.
             return _sources.AsParallel()
@@ -182,6 +195,11 @@ namespace Jarvis.Addin.Files.Indexing
         {
             return Math.Min(LevenshteinScorer.Score(entry.Title, query),
                 LevenshteinScorer.Score(entry.Description ?? entry.Title, query));
+        }
+
+        public void Handle(TriggerIndexMessage message)
+        {
+            _trigger.Set();
         }
     }
 }

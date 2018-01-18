@@ -4,9 +4,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Jarvis.Addin.Files.Extensions;
 using Jarvis.Addin.Files.Indexing;
 using Jarvis.Core;
+using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using Spectre.System.IO;
 
@@ -16,34 +20,38 @@ namespace Jarvis.Addin.Files.Sources
     internal sealed class DocumentIndexSource : IFileIndexSource
     {
         private readonly IFileSystem _fileSystem;
+        private readonly ISettingsStore _settings;
+        private readonly IJarvisLog _log;
 
         public string Name => "User document";
 
-        public DocumentIndexSource(IFileSystem fileSystem)
+        public DocumentIndexSource(IFileSystem fileSystem, ISettingsStore settings, IJarvisLog log)
         {
             _fileSystem = fileSystem;
+            _settings = settings;
+            _log = log;
         }
 
         public IEnumerable<IndexedEntry> Index()
         {
-            var folders = new[]
-            {
-                new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)),
-                new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.MyMusic)),
-                new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.MyVideos)),
-                new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.MyPictures))
-            };
+            var settings = FileSettings.Load(_settings);
+            var extensions = new HashSet<string>(settings.IncludedExtensions, StringComparer.OrdinalIgnoreCase);
+            var regexes = settings.ExcludedPatterns.Select(s => new Regex(s, RegexOptions.Singleline)).ToList();
 
-            foreach (var folder in folders)
+            foreach (var folder in settings.IncludedFolders)
             {
-                foreach (var entry in Index(folder))
+                foreach (var entry in Index(folder, settings.ExcludedFolders, extensions, regexes))
                 {
                     yield return entry;
                 }
             }
         }
 
-        private IEnumerable<IndexedEntry> Index(DirectoryPath path)
+        private IEnumerable<IndexedEntry> Index(
+            DirectoryPath path,
+            HashSet<DirectoryPath> excludedFolders,
+            HashSet<string> includedExtensions,
+            List<Regex> excludedPatterns)
         {
             var stack = new Stack<DirectoryPath>();
             stack.Push(path);
@@ -51,6 +59,20 @@ namespace Jarvis.Addin.Files.Sources
             while (stack.Count > 0)
             {
                 var current = stack.Pop();
+
+                // Folder excluded?
+                if (excludedFolders.Contains(current))
+                {
+                    _log.Debug($"Folder '{current.FullPath}' has been excluded.");
+                    continue;
+                }
+
+                // Folder name not allowed?
+                if (TryMatchPattern(current, excludedPatterns, out var pattern))
+                {
+                    _log.Debug($"Folder '{current.FullPath}' matched pattern '{pattern}' that has been excluded.");
+                    continue;
+                }
 
                 var directory = _fileSystem.GetDirectorySafe(current);
                 if (directory != null)
@@ -78,6 +100,18 @@ namespace Jarvis.Addin.Files.Sources
                             // TODO: Temporary fix due to Spectre.System lib.
                             continue;
                         }
+                        if ((file.Attributes & FileAttributes.System) == FileAttributes.System)
+                        {
+                            continue;
+                        }
+                        if ((file.Attributes & FileAttributes.Hidden) == FileAttributes.Hidden)
+                        {
+                            continue;
+                        }
+                        if (!includedExtensions.Contains(file.Path.GetExtension().Name))
+                        {
+                            continue;
+                        }
 
                         yield return DocumentIndexSourceEntry.File(file.Path,
                             file.Path.GetFilename().FullPath, file.Path.FullPath,
@@ -89,6 +123,21 @@ namespace Jarvis.Addin.Files.Sources
                         .ForEach(child => stack.Push(child.Path));
                 }
             }
+        }
+
+        private static bool TryMatchPattern(DirectoryPath current, IEnumerable<Regex> excludedPatterns, out Regex pattern)
+        {
+            pattern = null;
+            var currentName = current.GetDirectoryName();
+            foreach (var excludedPattern in excludedPatterns)
+            {
+                if (excludedPattern.IsMatch(currentName))
+                {
+                    pattern = excludedPattern;
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -38,11 +38,15 @@ namespace Jarvis
             // Configure container.
             var builder = new ContainerBuilder();
             builder.RegisterInstance(Application).As<JarvisApplication>();
-            builder.RegisterModule(new JarvisModule(
+            builder.RegisterModule(new JarvisModule());
+            builder.RegisterModule<UpdaterModule>();
+            builder.RegisterModule<LoggingModule>();
+
+            // Configure addins.
+            builder.RegisterModule(new AddinModule(
                 typeof(FileAddin).Assembly,
                 typeof(GoogleAddin).Assembly,
                 typeof(WikipediaAddin).Assembly));
-            builder.RegisterModule<LoggingModule>();
 
             // Build the container.
             _container = builder.Build();
@@ -61,7 +65,8 @@ namespace Jarvis
             }
 
             // Show the root view.
-            DisplayRootViewFor<ShellViewModel>();
+            var windowSettings = new Dictionary<string, object> { { "Visibility", Visibility.Hidden } };
+            DisplayRootViewFor<ShellViewModel>(windowSettings);
             Application?.MainWindow?.Hide();
 
             // Create the taskbar icon.
@@ -72,7 +77,7 @@ namespace Jarvis
 
             // Register the hotkey.
             var service = IoC.Get<ApplicationService>();
-            _hotKey = new HotKey(() => service.Toggle());
+            _hotKey = new KeyboardHook(() => service.Toggle());
         }
 
         protected override void OnExit(object sender, EventArgs e)

@@ -11,7 +11,8 @@
         ResizeMode="NoResize"
         AllowsTransparency="True"
         ShowActivated="False"
-        Topmost="False" Visibility="Hidden" 
+        Topmost="False"
+        Visibility="Hidden"
         cal:Message.Attach="[Event Deactivated] = [Action OnDeactivated()]; [Event Closing] = [Action OnClose($eventArgs)]"
         WindowStyle="None">
 
@@ -69,7 +70,7 @@
                     </StackPanel>
                 </Grid>
                 <StackPanel Margin="11,0,11.4,11" Background="Transparent">
-                    <ContentControl x:Name="Result" />
+                    <ContentControl x:Name="Result" Focusable="False" />
                 </StackPanel>
             </StackPanel>
         </Border>

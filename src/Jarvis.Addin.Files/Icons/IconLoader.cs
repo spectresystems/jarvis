@@ -10,7 +10,7 @@ using System.Runtime.Caching;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
-namespace Jarvis.Addin.Files.Drawing
+namespace Jarvis.Addin.Files.Icons
 {
     internal sealed class IconLoader
     {

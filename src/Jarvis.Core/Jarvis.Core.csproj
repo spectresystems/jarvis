@@ -75,14 +75,15 @@
     <Compile Include="Diagnostics\LogExtensions.cs" />
     <Compile Include="Diagnostics\LogLevel.cs" />
     <Compile Include="Ensure.cs" />
+    <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\SettingStoreExtensions.cs" />
     <Compile Include="IAddin.cs" />
     <Compile Include="IInitializable.cs" />
+    <Compile Include="Interop\Win32.Keyboard.cs" />
+    <Compile Include="Interop\Win32.Process.cs" />
     <Compile Include="ISettings.cs" />
     <Compile Include="Interop\Win32.Shell.cs" />
-    <Compile Include="Interop\Win32.Common.cs" />
-    <Compile Include="Interop\Win32.HotKey.cs" />
     <Compile Include="Interop\Win32.Monitor.cs" />
     <Compile Include="Interop\Win32.Primitives.cs" />
     <Compile Include="Interop\Win32.System.cs" />
@@ -90,6 +91,7 @@
     <Compile Include="IQueryProvider.cs" />
     <Compile Include="IQueryResult.cs" />
     <Compile Include="AddinAttribute.cs" />
+    <Compile Include="ISettingsSeeder.cs" />
     <Compile Include="ISettingsStore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Query.cs" />

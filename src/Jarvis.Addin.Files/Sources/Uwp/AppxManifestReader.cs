@@ -160,7 +160,7 @@ namespace Jarvis.Addin.Files.Sources.Uwp
 
                 // Read the resource value.
                 var builder = new StringBuilder(255);
-                var result = Win32.SHLoadIndirectString(source, builder, (uint)builder.Capacity, IntPtr.Zero);
+                var result = Win32.Shell.SHLoadIndirectString(source, builder, (uint)builder.Capacity, IntPtr.Zero);
                 if (result == Win32.Hresult.Ok)
                 {
                     var resourceValue = builder.ToString();

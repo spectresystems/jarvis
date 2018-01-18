@@ -2,13 +2,10 @@
 // Spectre Systems AB licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-namespace Jarvis.Core.Interop
+namespace Jarvis.Core
 {
-    public static partial class Win32
+    public interface ISettingsSeeder
     {
-        public enum Hresult : uint
-        {
-            Ok = 0x0000,
-        }
+        void Seed(ISettingsStore store);
     }
 }

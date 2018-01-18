@@ -15,21 +15,34 @@ namespace Jarvis.Services
     public sealed class SettingsService : ISettingsStore, IInitializable
     {
         private readonly IFileSystem _fileSystem;
+        private readonly List<ISettingsSeeder> _seeders;
         private readonly IJarvisLog _log;
         private readonly object _lock;
         private readonly Dictionary<string, string> _settings;
+        private bool _dirty;
 
-        public SettingsService(IFileSystem fileSystem, IJarvisLog log)
+        public SettingsService(IFileSystem fileSystem, IEnumerable<ISettingsSeeder> seeders, IJarvisLog log)
         {
             _fileSystem = fileSystem;
+            _seeders = new List<ISettingsSeeder>(seeders);
             _log = log;
             _lock = new object();
             _settings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            _dirty = false;
         }
 
         void IInitializable.Initialize()
         {
             Load();
+
+            if (_seeders.Count > 0)
+            {
+                foreach (var seeder in _seeders)
+                {
+                    seeder.Seed(this);
+                }
+                Save();
+            }
         }
 
         public void Load()
@@ -62,15 +75,6 @@ namespace Jarvis.Services
                         _log.Error(ex, $"An error occured while loading settings from '{path.FullPath}'.");
                     }
                 }
-                else
-                {
-                    // Set the default settings.
-                    this.Set(Constants.Settings.General.CheckForUpdates, true);
-                    this.Set(Constants.Settings.General.IncludePreviews, false);
-
-                    // Save the default settings.
-                    Save();
-                }
             }
         }
 
@@ -78,27 +82,42 @@ namespace Jarvis.Services
         {
             lock (_lock)
             {
-                var path = PathUtility.DataPath.CombineWithFilePath(new FilePath("settings.dat"));
-
-                try
+                if (_dirty)
                 {
-                    using (var stream = _fileSystem.GetFile(path).OpenWrite())
-                    using (var writer = new BinaryWriter(stream))
+                    var path = PathUtility.DataPath.CombineWithFilePath(new FilePath("settings.dat"));
+
+                    try
                     {
-                        writer.Write(_settings.Count);
-                        foreach (var setting in _settings)
+                        using (var stream = _fileSystem.GetFile(path).OpenWrite())
+                        using (var writer = new BinaryWriter(stream))
                         {
-                            writer.Write(setting.Key);
-                            writer.Write(setting.Value);
+                            writer.Write(_settings.Count);
+                            foreach (var setting in _settings)
+                            {
+                                writer.Write(setting.Key);
+                                writer.Write(setting.Value);
+                            }
                         }
-                    }
 
-                    _log.Information($"Saved settings to '{path.FullPath}'.");
+                        _log.Information($"Saved settings to '{path.FullPath}'.");
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Error(ex, $"An error occured while saving settings to '{path.FullPath}'.");
+                    }
+                    finally
+                    {
+                        _dirty = false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    _log.Error(ex, $"An error occured while saving settings to '{path.FullPath}'.");
-                }
+            }
+        }
+
+        public bool Exist(string key)
+        {
+            lock (_lock)
+            {
+                return _settings.ContainsKey(key);
             }
         }
 
@@ -116,6 +135,7 @@ namespace Jarvis.Services
             lock (_lock)
             {
                 _settings[key] = value;
+                _dirty = true;
             }
         }
     }

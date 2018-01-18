@@ -111,7 +111,11 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Bootstrapping\AddinModule.cs" />
+    <Compile Include="Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
+    <Compile Include="Bootstrapping\UpdaterModule.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="Infrastructure\Utilities\KeyboardHook.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">
       <DependentUpon>IconControl.xaml</DependentUpon>
@@ -120,7 +124,6 @@
     <Compile Include="Infrastructure\Presentation\Converters\DateTimeConverter.cs" />
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\Diagnostics\SerilogLog.cs" />
-    <Compile Include="Infrastructure\Utilities\HotKey.cs" />
     <Compile Include="Infrastructure\Utilities\PathUtility.cs" />
     <Compile Include="Infrastructure\Utilities\WindowUtility.cs" />
     <Compile Include="JarvisApplication.xaml.cs">
@@ -145,6 +148,7 @@
     </Compile>
     <Compile Include="Services\ApplicationService.cs" />
     <Compile Include="Services\JarvisTaskbarIcon.cs" />
+    <Compile Include="Services\Updating\GitHubReleaseAsset.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="Services\QueryProviderService.cs" />
     <Compile Include="Services\ServiceOrchestrator.cs" />
@@ -186,6 +190,10 @@
     <Page Include="Infrastructure\Presentation\Controls\IconControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\JarvisStyles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AboutView.xaml">
       <SubType>Designer</SubType>
