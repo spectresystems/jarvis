@@ -36,5 +36,32 @@ namespace Jarvis.Addin.Files.Indexing
                 yield return builder.ToString();
             }
         }
+
+        public static IEnumerable<string> TokenizePascalCase(string word)
+        {
+            var buffer = new StringBuilder();
+            var previousWasLowerCase = false;
+            foreach (var character in word)
+            {
+                if (previousWasLowerCase && char.IsUpper(character))
+                {
+                    yield return buffer.ToString();
+                    buffer.Clear();
+                    previousWasLowerCase = false;
+                }
+
+                if (char.IsLower(character))
+                {
+                    previousWasLowerCase = true;
+                }
+
+                buffer.Append(character);
+            }
+
+            if (buffer.Length > 0)
+            {
+                yield return buffer.ToString();
+            }
+        }
     }
 }
