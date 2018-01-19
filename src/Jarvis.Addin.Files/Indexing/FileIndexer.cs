@@ -151,10 +151,23 @@ namespace Jarvis.Addin.Files.Indexing
             var parts = Tokenizer.Tokenize(word).ToArray();
             for (var i = 0; i < parts.Length; i++)
             {
+                // Stop word?
                 if (!_stopWords.Contains(parts[i]) && parts[i].Length > 2)
                 {
                     trie.Insert(parts[i], entry);
                 }
+
+                // PascalCase?
+                var pascalCaseParts = Tokenizer.TokenizePascalCase(parts[i]).ToArray();
+                if (pascalCaseParts.Length > 1)
+                {
+                    foreach (var pascalCasePart in pascalCaseParts)
+                    {
+                        trie.Insert(pascalCasePart, entry);
+                    }
+                }
+
+                // Build partial sentence.
                 trie.Insert(string.Join(" ", parts.Skip(i).Take(parts.Length - i)), entry);
             }
         }

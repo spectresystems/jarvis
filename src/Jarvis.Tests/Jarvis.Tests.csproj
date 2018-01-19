@@ -83,6 +83,7 @@
     <Compile Include="Extensions\FileSystemExtensions.cs" />
     <Compile Include="Fakes\FakeNativeStreamProvider.cs" />
     <Compile Include="Unit\Addins\Files\AppxManifestReaderTests.cs" />
+    <Compile Include="Unit\Addins\Files\TokenizerTests.cs" />
     <Compile Include="Unit\Core\Scoring\LevenshteinScorerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\ResourceReader.cs" />
