@@ -33,12 +33,14 @@ namespace Jarvis.Addin.Processes
         {
             return Task.Run(() =>
             {
-                var results = Process.GetProcesses()
-                    .Where(process => process.MainWindowTitle.IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0)
-                    .Select(process => (IQueryResult) new ProcessResult(process.Id, process.MainWindowTitle, process.ProcessName, LevenshteinScorer.Score(process.MainWindowTitle, query.Raw, false), LevenshteinScorer.Score(process.MainWindowTitle, query.Raw)))
-                    .ToList();
-
-                return results.AsEnumerable();
+                return (IEnumerable<IQueryResult>) Process.GetProcesses()
+                    .Where(process => process.MainWindowTitle
+                                          .IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0)
+                    .Select(process => (IQueryResult) new ProcessResult(
+                        process.Id, process.MainWindowTitle, process.ProcessName,
+                        LevenshteinScorer.Score(process.MainWindowTitle, query.Raw, false),
+                        LevenshteinScorer.Score(process.MainWindowTitle, query.Raw)))
+                    .ToList(); // Make LINQ execute inside Task before returning
             });
         }
 
