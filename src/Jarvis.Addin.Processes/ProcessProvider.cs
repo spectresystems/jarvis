@@ -35,7 +35,8 @@ namespace Jarvis.Addin.Processes
             {
                 return (IEnumerable<IQueryResult>) Process.GetProcesses()
                     .Where(process => process.MainWindowTitle
-                                          .IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0)
+                                          .IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0 &&
+                                      process.Responding) // Ensure there is a GUI to display
                     .Select(process => (IQueryResult) new ProcessResult(
                         process.Id, process.MainWindowTitle, process.ProcessName,
                         LevenshteinScorer.Score(process.MainWindowTitle, query.Raw, false),
