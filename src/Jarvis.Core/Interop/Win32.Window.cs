@@ -21,7 +21,10 @@ namespace Jarvis.Core.Interop
             public static extern bool SetForegroundWindow(IntPtr hwnd); 
  
             [DllImport("user32.dll")] 
-            public static extern bool ShowWindow(IntPtr hwnd, int nCmdShow); 
+            public static extern bool ShowWindow(IntPtr hwnd, int nCmdShow);
+
+            [DllImport("user32.dll")]
+            public static extern bool IsIconic(IntPtr hwnd);
         }
     }
 }

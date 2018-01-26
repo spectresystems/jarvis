@@ -49,9 +49,7 @@ namespace Jarvis.Addin.Processes
             var process = Process.GetProcessById(result.ProcessId);
             Win32.Window.SetForegroundWindow(process.MainWindowHandle);
                         
-            var rect = new Win32.W32Rect();
-            Win32.Window.GetWindowRect(process.MainWindowHandle, ref rect);
-            if (rect.Top < 0 && rect.Right < 0 && rect.Bottom < 0 && rect.Left < 0) // Window is minimized
+            if (Win32.Window.IsIconic(process.MainWindowHandle)) // Window is minimized
             {
                 Win32.Window.ShowWindow(process.MainWindowHandle, 1);
             }
