@@ -70,7 +70,7 @@ namespace Jarvis.Addin.Google
 
                     return queryResults.Any()
                         ? queryResults.Select(x => GoogleResult.Create(query, x))
-                        : new[] { GoogleResult.Create(query, description: $"Search Google for '{query.Argument}'") };
+                        : new[] { await CreateFallbackResult(query.Argument) };
                 }
             }
             catch (Exception e)
@@ -79,6 +79,11 @@ namespace Jarvis.Addin.Google
             }
 
             return Enumerable.Empty<IQueryResult>();
+        }
+
+        protected override Task<IQueryResult> CreateFallbackResult(string query)
+        {
+            return Task.FromResult(GoogleResult.Create(new Query($"g {query}"), description: $"Search Google for '{query}'"));
         }
 
         protected override Task ExecuteAsync(GoogleResult result)

@@ -48,6 +48,11 @@ namespace Jarvis.Addin.Files
             return await _index.Find(query.Raw?.Trim(), CancellationToken.None).ConfigureAwait(false);
         }
 
+        protected override Task<IQueryResult> CreateFallbackResult(string query)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override Task ExecuteAsync(FileResult result)
         {
             if (result.Path != null)
