@@ -18,10 +18,20 @@ namespace Jarvis.Addin.Processes
     internal sealed class ProcessProvider : QueryProvider<ProcessResult>
     {
         private readonly IJarvisLog _log;
+        private readonly TimeSpan _cacheExpirationDuration;
+        private bool _isUpdatingCache;
+        private Process[] _processesCache;
+        private DateTimeOffset _cacheTimestamp;
 
         public ProcessProvider(IJarvisLog log)
         {
             _log = log;
+            _cacheExpirationDuration = TimeSpan.FromSeconds(10);
+            _isUpdatingCache = false;
+            _processesCache = new Process[0];
+            _cacheTimestamp = DateTimeOffset.MinValue;
+            
+            UpdateProcessesCache();
         }
         
         protected override Task<ImageSource> GetIconAsync(ProcessResult result)
@@ -33,15 +43,16 @@ namespace Jarvis.Addin.Processes
         {
             return Task.Run(() =>
             {
-                return (IEnumerable<IQueryResult>) Process.GetProcesses()
+                UpdateProcessesCache();
+                
+                return (IEnumerable<IQueryResult>) _processesCache
                     .Where(process => process.MainWindowTitle
-                                          .IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0 &&
-                                      process.Responding) // Ensure there is a GUI to display
+                                          .IndexOf(query.Raw, StringComparison.OrdinalIgnoreCase) >= 0)
                     .Select(process => (IQueryResult) new ProcessResult(
                         process.Id, process.MainWindowTitle, process.ProcessName,
                         LevenshteinScorer.Score(process.MainWindowTitle, query.Raw, false),
                         LevenshteinScorer.Score(process.MainWindowTitle, query.Raw)))
-                    .ToList(); // Make LINQ execute inside Task before returning
+                    .ToList();
             });
         }
 
@@ -56,6 +67,22 @@ namespace Jarvis.Addin.Processes
             }
 
             return Task.CompletedTask;
+        }
+
+        private void UpdateProcessesCache()
+        {
+            if(DateTimeOffset.Now - _cacheTimestamp < _cacheExpirationDuration) return;
+            if (_isUpdatingCache) return;
+
+            _isUpdatingCache = true;
+
+            _cacheTimestamp = DateTimeOffset.Now;
+            _processesCache = Process.GetProcesses()
+                .Where(process => process.Responding &&
+                                  !string.IsNullOrWhiteSpace(process.MainWindowTitle))
+                .ToArray();
+
+            _isUpdatingCache = false;
         }
     }
 }
