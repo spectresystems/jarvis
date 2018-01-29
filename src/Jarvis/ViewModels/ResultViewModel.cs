@@ -44,7 +44,35 @@ namespace Jarvis.ViewModels
                 Items.IsNotifying = false;
 
                 var query = new Query(queryString);
-                await _provider.Query(query, Items).ConfigureAwait(false);
+                var result = await _provider.Query(query).ConfigureAwait(false);
+
+                // Remove items.
+                for (var i = Items.Count - 1; i >= 0; i--)
+                {
+                    var current = Items[i];
+                    if (!result.Contains(current))
+                    {
+                        Items.Remove(current);
+                    }
+                }
+
+                // Add new items.
+                foreach (var item in result)
+                {
+                    if (!Items.Contains(item))
+                    {
+                        Items.Add(item);
+                    }
+                    else
+                    {
+                        // Same item but higher score?
+                        if (Math.Abs(Items[Items.IndexOf(item)].Score - item.Score) > 0.00001f)
+                        {
+                            Items.Remove(item);
+                            Items.Add(item);
+                        }
+                    }
+                }
 
                 Items.IsNotifying = true;
                 SelectedResultIndex = 0;

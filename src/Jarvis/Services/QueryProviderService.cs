@@ -35,44 +35,22 @@ namespace Jarvis.Services
             return null;
         }
 
-        public async Task Query(Query query, IList<IQueryResult> target)
+        public async Task<IList<IQueryResult>> Query(Query query)
         {
             // Query all search providers.
             var providers = GetProviders(query);
-            var tasks = providers.Select(async provider =>
-            {
-                var result = (await provider.QueryAsync(query)).ToArray();
 
-                // Remove items.
-                for (var i = target.Count - 1; i >= 0; i--)
-                {
-                    var current = target[i];
-                    if (!result.Contains(current))
-                    {
-                        target.Remove(target[i]);
-                    }
-                }
+            var queryTasks = providers
+                .Select(provider => provider.QueryAsync(query))
+                .ToList();
 
-                // Add new items.
-                foreach (var item in result)
-                {
-                    if (!target.Contains(item))
-                    {
-                        target.Add(item);
-                    }
-                    else
-                    {
-                        // Same item but higher score?
-                        if (Math.Abs(target[target.IndexOf(item)].Score - item.Score) > 0.00001f)
-                        {
-                            target.Remove(item);
-                            target.Add(item);
-                        }
-                    }
-                }
-            });
+            await Task.WhenAll(queryTasks);
 
-            await Task.WhenAll(tasks);
+            return queryTasks
+                .Where(t => t.Status == TaskStatus.RanToCompletion)
+                .SelectMany(t => t.Result)
+                .Distinct()
+                .ToList();
         }
 
         public async Task Execute(IQueryResult result)
