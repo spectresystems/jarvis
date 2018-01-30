@@ -46,6 +46,11 @@ namespace Jarvis.ViewModels
             _windowManager.ShowSettingsWindow();
         }
 
+        public void ShowAbout()
+        {
+            _windowManager.ShowAboutWindow();
+        }
+
         [UsedImplicitly]
         public void ExitJarvis()
         {

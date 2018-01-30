@@ -5,20 +5,21 @@
 using System;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Semver;
 
 namespace Jarvis.Services.Updating
 {
     public abstract class FakeUpdateChecker : IUpdateChecker
     {
-        private readonly Version _currentVersion;
-        private readonly Version _futureVersion;
+        private readonly SemVersion _currentVersion;
+        private readonly SemVersion _futureVersion;
         private readonly TimeSpan _delay;
 
         [UsedImplicitly]
         public sealed class WithUpdate : FakeUpdateChecker
         {
             public WithUpdate()
-                : base(new Version(0, 0, 1, 0), new Version(99, 99, 99, 99), TimeSpan.FromSeconds(10))
+                : base(new SemVersion(0, 0, 1), new SemVersion(99, 99, 99), TimeSpan.FromSeconds(10))
             {
             }
         }
@@ -27,12 +28,12 @@ namespace Jarvis.Services.Updating
         public sealed class WithoutUpdate : FakeUpdateChecker
         {
             public WithoutUpdate()
-                : base(new Version(0, 0, 1, 0), new Version(0, 0, 1, 0), TimeSpan.Zero)
+                : base(new SemVersion(0, 0, 1), new SemVersion(0, 0, 1), TimeSpan.Zero)
             {
             }
         }
 
-        private FakeUpdateChecker(Version currentVersion, Version futureVersion, TimeSpan delay)
+        private FakeUpdateChecker(SemVersion currentVersion, SemVersion futureVersion, TimeSpan delay)
         {
             _currentVersion = currentVersion;
             _futureVersion = futureVersion;

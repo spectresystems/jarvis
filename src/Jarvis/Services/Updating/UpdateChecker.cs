@@ -13,6 +13,7 @@ using Jarvis.Core;
 using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Semver;
 
 namespace Jarvis.Services.Updating
 {
@@ -21,18 +22,18 @@ namespace Jarvis.Services.Updating
     {
         private readonly ISettingsStore _settings;
         private readonly IJarvisLog _log;
-        private readonly Version _currentVersion;
+        private readonly SemVersion _currentVersion;
         private readonly HttpClient _client;
 
         public UpdateChecker(ISettingsStore settings, IJarvisLog log)
         {
             _settings = settings;
             _log = log;
-            _currentVersion = typeof(UpdateService).Assembly.GetName().Version;
+            _currentVersion = new SemVersion(typeof(UpdateService).Assembly.GetName().Version);
 
             _client = new HttpClient();
             _client.DefaultRequestHeaders.UserAgent.Add(
-                new ProductInfoHeaderValue("Jarvis", Assembly.GetExecutingAssembly().GetName().Version.ToString()));
+                new ProductInfoHeaderValue("Jarvis", _currentVersion.ToString()));
         }
 
         public async Task<JarvisUpdateInfo> CheckForUpdates()

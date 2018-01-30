@@ -98,12 +98,6 @@ namespace Jarvis.ViewModels
         }
 
         [UsedImplicitly]
-        public void OnShowAbout()
-        {
-            _windowManager.ShowAboutWindow();
-        }
-
-        [UsedImplicitly]
         public void OnClose(CancelEventArgs e)
         {
             if (!_application.IsWindowsShuttingDown())

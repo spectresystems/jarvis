@@ -41,33 +41,28 @@
                              Background="Transparent"
                              cal:Message.Attach="[Event PreviewKeyDown] = [Action OnKeyDown($eventArgs)]; [Event TextChanged] = [Action ExecuteQuery($this.Text)]; [Event GotKeyboardFocus] = [Action OnKeyboardFocus($source)]">
                     </TextBox>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,5,0,0">
-                        <Image x:Name="ShowAbout" Source="../Resources/Help.png"
-                               Width="16" Height="16" VerticalAlignment="Top"
-                               cal:Message.Attach="[Event MouseDown] = [Action OnShowAbout()]" />
-                        <Image x:Name="UpdateAvailable" Visibility="{Binding UpdateAvailableVisibility, FallbackValue=Collapsed}" 
+                    <Image Grid.Column="1" Margin="0,5,0,0" x:Name="UpdateAvailable" Visibility="{Binding UpdateAvailableVisibility, FallbackValue=Collapsed}" 
                                Width="16" Height="16" Source="../Resources/Update.png" 
                                VerticalAlignment="Top" Opacity="0"
                                cal:Message.Attach="[Event MouseDown] = [Action OnUpdateAvailableClicked()]">
-                            <Image.Style>
-                                <Style>
-                                    <Style.Triggers>
-                                        <Trigger Property="Image.IsVisible" Value="True">
-                                            <Trigger.EnterActions>
-                                                <BeginStoryboard>
-                                                    <Storyboard>
-                                                        <DoubleAnimation From="0" To="4" Storyboard.TargetProperty="Opacity" 
+                        <Image.Style>
+                            <Style>
+                                <Style.Triggers>
+                                    <Trigger Property="Image.IsVisible" Value="True">
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard>
+                                                <Storyboard>
+                                                    <DoubleAnimation From="0" To="4" Storyboard.TargetProperty="Opacity" 
                                                                          Duration="0:0:1.5" RepeatBehavior="Forever"
                                                                          AutoReverse="True"/>
-                                                    </Storyboard>
-                                                </BeginStoryboard>
-                                            </Trigger.EnterActions>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Image.Style>
-                        </Image>
-                    </StackPanel>
+                                                </Storyboard>
+                                            </BeginStoryboard>
+                                        </Trigger.EnterActions>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Image.Style>
+                    </Image>
                 </Grid>
                 <StackPanel Margin="11,0,11.4,11" Background="Transparent">
                     <ContentControl x:Name="Result" Focusable="False" />

@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Semver;
 
 namespace Jarvis.Services.Updating
 {
@@ -29,14 +30,14 @@ namespace Jarvis.Services.Updating
         [JsonProperty("assets")]
         public List<GitHubReleaseAsset> Assets { get; set; }
 
-        public JarvisUpdateInfo ToJarvisUpdateInfo(Version currentVersion)
+        public JarvisUpdateInfo ToJarvisUpdateInfo(SemVersion currentVersion)
         {
             var installer = Assets.FirstOrDefault(x => x.DownloadUrl?.EndsWith(".exe") ?? false);
 
             return new JarvisUpdateInfo
             {
                 CurrentVersion = currentVersion,
-                FutureVersion = Version.Parse(Name.Trim('v')),
+                FutureVersion = SemVersion.Parse(Name.Trim('v')),
                 ReleaseUri = new Uri(HtmlUrl),
                 Prerelease = Prerelease,
                 InstallerName = installer?.FileName,

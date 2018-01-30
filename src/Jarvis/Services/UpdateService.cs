@@ -34,9 +34,9 @@ namespace Jarvis.Services
 
         public async Task<bool> Run(CancellationToken token)
         {
-#if !DEBUG || FAKERELEASE
+#if !DEBUG
             // Wait a minute after the application starts to check for updates.
-            if (token.WaitHandle.WaitOne((int)TimeSpan.FromSeconds(30).TotalMilliseconds))
+            if (token.WaitHandle.WaitOne((int)TimeSpan.FromSeconds(15).TotalMilliseconds))
             {
                 _log.Information("We were instructed to stop (1).");
                 return true;
