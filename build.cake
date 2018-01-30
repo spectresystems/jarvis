@@ -205,10 +205,16 @@ Task("Publish-Preview-To-GitHub")
 
     // Add assets.
     GitReleaseManagerAddAssets(
-        parameters.GitHubUsername, parameters.GitHubPassword, 
-        "spectresystems", "jarvis", 
+        parameters.GitHubUsername, parameters.GitHubPassword,
+        "spectresystems", "jarvis",
         $"v{version.SemVersion}",
         $"./.artifacts/Jarvis-{version.SemVersion}-x64.exe");
+
+    // Publish release.
+    GitReleaseManagerPublish(
+        parameters.GitHubUsername, parameters.GitHubPassword,
+        "spectresystems", "jarvis",
+        $"v{version.SemVersion}");
 });
 
 ///////////////////////////////////////////////////////////////////////////////
