@@ -41,7 +41,7 @@ This project has adopted the code of conduct defined by the [Contributor Covenan
 
 ## License
 
-Copyright 2017 Spectre Systems AB and contributors.
+Copyright 2017 Spectre Systems AB.
 
 Jarvis is provided as-is under the MIT license.  
 For more information see [LICENSE](https://github.com/spectresystems/jarvis/blob/develop/LICENSE).

@@ -13,12 +13,12 @@
      xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
 
     <Bundle Name="Jarvis" Manufacturer="Spectre Systems AB" UpgradeCode="$(var.UpgradeCode)" Version="$(var.Version)" 
-            IconSourceFile="$(var.ResourceDirectory)\gfx\Jarvis.ico">
+            IconSourceFile="$(var.ResourceDirectory)\gfx\jarvis.ico">
 
         <BootstrapperApplicationRef Id="WixStandardBootstrapperApplication.RtfLicense">
             <bal:WixStandardBootstrapperApplication ShowVersion="yes" 
                                                     LicenseFile="$(var.ResourceDirectory)/installer/LICENSE.rtf" 
-                                                    LogoFile="$(var.ResourceDirectory)/installer/Logo.png" />
+                                                    LogoFile="$(var.ResourceDirectory)/gfx/jarvis-installer.png" />
         </BootstrapperApplicationRef>
 
         <Variable Name="InstallFolder" Type="string" Value="$(var.InstallFolder)"/>
