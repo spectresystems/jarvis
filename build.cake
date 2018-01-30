@@ -188,11 +188,16 @@ Task("Publish-Preview-To-GitHub")
         throw new CakeException("Could not resolve GitHub password.");
     }
 
+    // Create empty release notes for now.
+    var releaseNotes = MakeAbsolute(File($"./.artifacts/ReleaseNotes.md"));
+    System.IO.File.WriteAllText(releaseNotes.FullPath, string.Empty);
+
     // Create release.
     GitReleaseManagerCreate(
         parameters.GitHubUsername, parameters.GitHubPassword, 
         "spectresystems", "jarvis", new GitReleaseManagerCreateSettings
     {
+        InputFilePath = releaseNotes,
         Name = $"v{version.SemVersion}",
         Prerelease = true,
         TargetCommitish = "develop"
@@ -204,12 +209,6 @@ Task("Publish-Preview-To-GitHub")
         "spectresystems", "jarvis", 
         $"v{version.SemVersion}",
         $"./.artifacts/Jarvis-{version.SemVersion}-x64.exe");
-
-    // Close the release.
-    GitReleaseManagerClose(
-        parameters.GitHubUsername, parameters.GitHubPassword, 
-        "spectresystems", "jarvis", 
-        $"v{version.SemVersion}");
 });
 
 ///////////////////////////////////////////////////////////////////////////////
