@@ -225,7 +225,7 @@ Task("Default")
     .IsDependentOn("Build-Chocolatey-Package");
 
 Task("AppVeyor")
-    .IsDependentOn("Publish-Preview-To-GitHub");
+    .IsDependentOn("Build-Installer");
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
