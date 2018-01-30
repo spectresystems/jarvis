@@ -44,7 +44,7 @@ Task("Restore")
 });
 
 Task("Patch-Version")
-    .WithCriteria(() => patch)
+    .WithCriteria(() => patch || appveyor.IsRunningOnAppVeyor)
     .Does(() =>
 {
     CreateAssemblyInfo("./src/SharedAssemblyInfo.cs", new AssemblyInfoSettings 
