@@ -1,4 +1,5 @@
-#tool nuget:?package=GitVersion.CommandLine&version=3.6.2
+#load "./appveyor.cake"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=GitVersion.CommandLine&version=3.6.2"
 
 public class BuildVersion
 {
@@ -9,7 +10,7 @@ public class BuildVersion
     public string DotNetAsterix { get; private set; }
     public string Milestone { get; private set; }
 
-    public static BuildVersion Calculate(ICakeContext context)
+    public static BuildVersion Calculate(ICakeContext context, AppVeyorSettings appveyor)
     {
         if (context == null)
         {
@@ -25,6 +26,17 @@ public class BuildVersion
         if (context.IsRunningOnWindows())
         {
             context.Information("Calculating versions...");
+
+            if (!appveyor.IsLocal)
+            {
+                // Update AppVeyor version number.
+                context.GitVersion(new GitVersionSettings{
+                    UpdateAssemblyInfo = true,
+                    OutputType = GitVersionOutput.BuildServer,
+                    UpdateAssemblyInfoFilePath = "./src/SharedAssemblyInfo.cs",
+                });
+            }
+            
             GitVersion assertedVersions = context.GitVersion(new GitVersionSettings
             {
                 OutputType = GitVersionOutput.Json,
@@ -42,6 +54,7 @@ public class BuildVersion
             msiVersion = $"{major}.{minor}.{10000 + patch * 1000 + revision}";
             fullVersion = $"{version}.{revision}";
 
+            context.Information("Milestone: {0}", milestone);
             context.Information("Version: {0}", version);
             context.Information("Full version: {0}", fullVersion);
             context.Information("Semantic Version: {0}", semVersion);

@@ -2,7 +2,7 @@ $ENV:CAKE_NUGET_USEINPROCESSCLIENT='true'
 $ToolPath = Join-Path $PSScriptRoot "tools"
 $NugetPath = Join-Path $ToolPath "nuget.exe"
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
-$CakeVersion = "0.24.0"
+$CakeVersion = "0.25.0"
 
 # Make sure tools folder exists
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent

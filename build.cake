@@ -1,7 +1,11 @@
 #load "./build/version.cake"
-#tool nuget:?package=Wix&version=3.11.0
-#tool nuget:?package=chocolatey&version=0.10.8&exclude=./tools/chocolateyinstall/redirects/choco.exe
-#tool nuget:?package=xunit.runner.console&version=2.3.1
+#load "./build/appveyor.cake"
+#load "./build/parameters.cake"
+
+#tool "nuget:https://api.nuget.org/v3/index.json?package=Wix&version=3.11.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.10.8&exclude=./tools/chocolateyinstall/redirects/choco.exe"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=xunit.runner.console&version=2.3.1"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=gitreleasemanager&version=0.5.0"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
@@ -15,7 +19,9 @@ var patch = HasArgument("patch");
 // GLOBALS
 ///////////////////////////////////////////////////////////////////////////////
 
-var version = BuildVersion.Calculate(Context);
+var appveyor = AppVeyorSettings.Initialize(Context);
+var parameters = Parameters.Initialize(Context);
+var version = BuildVersion.Calculate(Context, appveyor);
 
 ///////////////////////////////////////////////////////////////////////////////
 // TASKS
@@ -59,9 +65,7 @@ Task("Build")
 {
    MSBuild("./src/Jarvis.sln", new MSBuildSettings()
         .SetConfiguration(configuration)
-        .SetVerbosity(Verbosity.Minimal)
-        .WithWarningsAsError()
-        .WithProperty("AssemblyVersion", "2.0.0.0"));
+        .SetVerbosity(Verbosity.Minimal));
 });
 
 Task("Run-Unit-Tests")
@@ -168,12 +172,56 @@ Task("Build-Chocolatey-Package")
     });
 });
 
+Task("Publish-Preview-To-GitHub")
+    .IsDependentOn("Build-Installer")
+    .WithCriteria(() => appveyor.IsRunningOnAppVeyor 
+        && !appveyor.IsPullRequest && appveyor.IsDevelopBranch
+        && !appveyor.IsMaintenanceBuild)
+    .Does(() =>
+{
+    if(string.IsNullOrWhiteSpace(parameters.GitHubUsername)) 
+    {
+        throw new CakeException("Could not resolve GitHub username.");
+    }
+    if(string.IsNullOrWhiteSpace(parameters.GitHubPassword))
+    {
+        throw new CakeException("Could not resolve GitHub password.");
+    }
+
+    // Create release.
+    GitReleaseManagerCreate(
+        parameters.GitHubUsername, parameters.GitHubPassword, 
+        "spectresystems", "jarvis", new GitReleaseManagerCreateSettings
+    {
+        Milestone = version.Milestone,
+        Name = $"v{version.SemVersion}",
+        Prerelease = true,
+        TargetCommitish = "develop"
+    });
+
+    // Add assets.
+    GitReleaseManagerAddAssets(
+        parameters.GitHubUsername, parameters.GitHubPassword, 
+        "spectresystems", "jarvis", 
+        $"v{version.SemVersion}",
+        $"./.artifacts/Jarvis-{version.SemVersion}-x64.exe");
+
+    // Close the release.
+    GitReleaseManagerClose(
+        parameters.GitHubUsername, parameters.GitHubPassword, 
+        "spectresystems", "jarvis", 
+        $"v{version.SemVersion}");
+});
+
 ///////////////////////////////////////////////////////////////////////////////
 // TARGETS
 ///////////////////////////////////////////////////////////////////////////////
 
 Task("Default")
     .IsDependentOn("Build-Chocolatey-Package");
+
+Task("AppVeyor")
+    .IsDependentOn("Publish-Preview-To-GitHub");
 
 ///////////////////////////////////////////////////////////////////////////////
 // EXECUTION
