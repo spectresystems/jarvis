@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using Caliburn.Micro;
 using JetBrains.Annotations;
@@ -16,15 +17,17 @@ namespace Jarvis.ViewModels
         [UsedImplicitly]
         public Uri Licenses { get; }
         [UsedImplicitly]
-        public Version Version { get; }
+        public string Version { get; }
         [UsedImplicitly]
         public DateTime BuildDate { get; }
 
         public AboutViewModel()
         {
             Licenses = new Uri("pack://application:,,,/Jarvis;component/Resources/Licenses.rtf");
-            Version = typeof(AboutViewModel).Assembly.GetName().Version;
             BuildDate = GetLinkerTime();
+
+            var info = FileVersionInfo.GetVersionInfo(typeof(AboutViewModel).Assembly.Location);
+            Version = info.ProductVersion;
         }
 
         [UsedImplicitly]
