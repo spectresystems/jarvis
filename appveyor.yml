@@ -6,7 +6,7 @@ init:
 
 # Build script
 build_script:
-  - ps: .\build.ps1 --target=AppVeyor
+  - ps: .\build.ps1 --target=AppVeyor --verbosity=diagnostic
 
 # Tests
 test: off
