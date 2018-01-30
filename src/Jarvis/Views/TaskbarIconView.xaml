@@ -7,6 +7,7 @@
         <MenuItem Header="Search" InputGestureText="Alt+Space" cal:Message.Attach="ShowJarvis" />
         <MenuItem Header="Settings..." cal:Message.Attach="ShowSettings" />
         <Separator />
+        <MenuItem Header="About..." cal:Message.Attach="ShowAbout" />
         <MenuItem Header="Exit" cal:Message.Attach="ExitJarvis" />
     </ContextMenu>
 
