@@ -49,9 +49,9 @@ Task("Patch-Version")
 {
     CreateAssemblyInfo("./src/SharedAssemblyInfo.cs", new AssemblyInfoSettings 
     {
-        Version = version.MajorMinorPatchRevision,
-        FileVersion = version.MajorMinorPatchRevision,
-        InformationalVersion = version.SemVersion,
+        Version = version.MajorMinorPatch,
+        FileVersion = version.MajorMinorPatch,
+        InformationalVersion = version.MajorMinorPatch,
         Company = "Spectre Systems AB",
         Copyright = "Copyright (c) 2017 Spectre Systems AB",
         Product = "Jarvis"
