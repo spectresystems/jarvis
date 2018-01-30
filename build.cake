@@ -43,8 +43,8 @@ Task("Patch-Version")
 {
     CreateAssemblyInfo("./src/SharedAssemblyInfo.cs", new AssemblyInfoSettings 
     {
-        Version = version.Version,
-        FileVersion = version.Version,
+        Version = version.MajorMinorPatchRevision,
+        FileVersion = version.MajorMinorPatchRevision,
         InformationalVersion = version.SemVersion,
         Company = "Spectre Systems AB",
         Copyright = "Copyright (c) 2017 Spectre Systems AB",
@@ -100,7 +100,7 @@ Task("Build-Installer")
             { "PublishDirectory", "./.artifacts/bin" },
             { "Platform", "x64" },
             { "ResourceDirectory", "./res" },
-            { "Version", version.Version }
+            { "Version", version.MsiVersion }
         }
     });
 
@@ -128,7 +128,7 @@ Task("Build-Installer")
             { "JarvisInstaller", "./.artifacts/installer/Jarvis.msi" },
             { "Platform", "x64" },
             { "ResourceDirectory", "./res" },
-            { "Version", version.Version }
+            { "Version", version.MsiVersion }
         }
     });
 
