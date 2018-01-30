@@ -193,7 +193,6 @@ Task("Publish-Preview-To-GitHub")
         parameters.GitHubUsername, parameters.GitHubPassword, 
         "spectresystems", "jarvis", new GitReleaseManagerCreateSettings
     {
-        Milestone = version.Milestone,
         Name = $"v{version.SemVersion}",
         Prerelease = true,
         TargetCommitish = "develop"
