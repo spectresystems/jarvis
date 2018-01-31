@@ -74,6 +74,9 @@
             <Component Id="Newtonsoft.Json.dll" Guid="C5B7D5F0-779A-4E22-907B-6847FDF8D174">
                 <File Id="Newtonsoft.Json.dll" Source="$(var.PublishDirectory)\Newtonsoft.Json.dll" KeyPath="yes" Checksum="yes" />
             </Component>
+            <Component Id="Semver.dll" Guid="112C8196-7873-48CC-830C-8D444AE50B38">
+                <File Id="Semver.dll" Source="$(var.PublishDirectory)\Semver.dll" KeyPath="yes" Checksum="yes" />
+            </Component>
             <Component Id="Microsoft.Threading.Tasks.dll" Guid="296C87C4-483D-49D9-9F6B-8BB83E67E753">
                 <File Id="Microsoft.Threading.Tasks.dll" Source="$(var.PublishDirectory)\Microsoft.Threading.Tasks.dll" KeyPath="yes" Checksum="yes" />
             </Component>
@@ -111,6 +114,7 @@
             <ComponentRef Id="Caliburn.Micro.Platform.dll" />
             <ComponentRef Id="Hardcodet.Wpf.TaskbarNotification.dll" />
             <ComponentRef Id="Newtonsoft.Json.dll" />
+            <ComponentRef Id="Semver.dll" />
             <ComponentRef Id="Microsoft.Threading.Tasks.dll" />
             <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.Desktop.dll" />
             <ComponentRef Id="Microsoft.Threading.Tasks.Extensions.dll" />
