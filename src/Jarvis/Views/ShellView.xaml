@@ -37,7 +37,7 @@
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <TextBox Grid.Column="0" x:Name="QueryString" MaxLines="1" BorderThickness="0" FontSize="32" Margin="11,11,11,0" Padding="3"
-                             FontFamily="Segoe UI, Microsoft YaHei" FontWeight="Light" Foreground="#555555"
+                             FontFamily="Segoe UI, Microsoft YaHei" FontWeight="Light" Foreground="#555555" Focusable="True"
                              Background="Transparent"
                              cal:Message.Attach="[Event PreviewKeyDown] = [Action OnKeyDown($eventArgs)]; [Event TextChanged] = [Action ExecuteQuery($this.Text)]; [Event GotKeyboardFocus] = [Action OnKeyboardFocus($source)]">
                     </TextBox>
