@@ -176,7 +176,7 @@ Task("Publish-Preview-To-GitHub")
     .IsDependentOn("Build-Installer")
     .WithCriteria(() => appveyor.IsRunningOnAppVeyor 
         && !appveyor.IsPullRequest && appveyor.IsDevelopBranch
-        && !appveyor.IsMaintenanceBuild)
+        && !appveyor.IsMaintenanceBuild && !appveyor.IsTaggedBuild)
     .Does(() =>
 {
     if(string.IsNullOrWhiteSpace(parameters.GitHubUsername)) 

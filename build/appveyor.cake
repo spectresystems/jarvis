@@ -15,7 +15,8 @@ public sealed class AppVeyorSettings
         var branchName = buildSystem.AppVeyor.Environment.Repository.Branch;
 
         var commitMessage = buildSystem.AppVeyor.Environment.Repository.Commit.Message?.Trim();
-        var isMaintenanceBuild = commitMessage?.StartsWith("(build)", StringComparison.OrdinalIgnoreCase) ?? false;
+        var isMaintenanceBuild = (commitMessage?.StartsWith("(build)", StringComparison.OrdinalIgnoreCase) ?? false) ||
+            (commitMessage?.StartsWith("(maintenance)", StringComparison.OrdinalIgnoreCase) ?? false);
 
         return new AppVeyorSettings
         {
