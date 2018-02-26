@@ -5,7 +5,7 @@
 #tool "nuget:https://api.nuget.org/v3/index.json?package=Wix&version=3.11.0"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=chocolatey&version=0.10.8&exclude=./tools/chocolateyinstall/redirects/choco.exe"
 #tool "nuget:https://api.nuget.org/v3/index.json?package=xunit.runner.console&version=2.3.1"
-#tool "nuget:https://api.nuget.org/v3/index.json?package=gitreleasemanager&version=0.5.0"
+#tool "nuget:https://api.nuget.org/v3/index.json?package=gitreleasemanager&version=0.7.0"
 
 ///////////////////////////////////////////////////////////////////////////////
 // ARGUMENTS
