@@ -23,7 +23,7 @@
 
     <ListBox x:Name="Items" Height="Auto" MaxHeight="300" BorderThickness="0" SelectionMode="Single"
              SelectedItem="{Binding Path=SelectedResult}"
-             SelectedIndex="{Binding Path=SelectedResultIndex}"
+             SelectedIndex="{Binding Path=SelectedResultIndex, Mode=OneWay}"
              ItemsSource="{Binding Source={StaticResource SortedResults}}"
              behaviors:ListBoxBehavior.ScrollSelectedIntoView="True" Margin="-1,0,1,0">
 
