@@ -9,6 +9,7 @@ using Autofac;
 using Caliburn.Micro;
 using Jarvis.Addin.Files;
 using Jarvis.Addin.Google;
+using Jarvis.Addin.Processes;
 using Jarvis.Addin.Wikipedia;
 using Jarvis.Bootstrapping;
 using Jarvis.Core;
@@ -46,7 +47,8 @@ namespace Jarvis
             builder.RegisterModule(new AddinModule(
                 typeof(FileAddin).Assembly,
                 typeof(GoogleAddin).Assembly,
-                typeof(WikipediaAddin).Assembly));
+                typeof(WikipediaAddin).Assembly,
+                typeof(ProcessAddin).Assembly));
 
             // Build the container.
             _container = builder.Build();

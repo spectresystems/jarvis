@@ -238,6 +238,10 @@
       <Project>{630865d0-c44b-41bd-aa6e-4697a4a12bd9}</Project>
       <Name>Jarvis.Addin.Google</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Jarvis.Addin.Processes\Jarvis.Addin.Processes.csproj">
+      <Project>{AE5C446D-B1D3-4E98-941D-A751B80CA74F}</Project>
+      <Name>Jarvis.Addin.Processes</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Jarvis.Addin.Wikipedia\Jarvis.Addin.Wikipedia.csproj">
       <Project>{cbb05832-5634-4611-ada1-e3793c5765d6}</Project>
       <Name>Jarvis.Addin.Wikipedia</Name>
