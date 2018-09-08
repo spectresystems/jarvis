@@ -8,6 +8,12 @@ Jarvis is currently under development, and all features are not there yet. Pull 
 
 Jarvis is designed to not require elevated user privileges at any time, and will only index things available in the current user's scope. Indexed data is never transmitted over the internet.
 
+## Installation and usage
+
+You can install Jarvis from the [GitHub releases page](https://github.com/spectresystems/jarvis/releases). 
+
+After it is installed, press `alt`+`space` and type in your query. To search files and programs, just start typing. To search Wikipedia type `wiki` before the query. To search Google type `g` and then the query.
+
 ## Features
 
 * Search for installed Win32 and UWP applications.
