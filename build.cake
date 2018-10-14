@@ -60,7 +60,6 @@ Task("Patch-Version")
 });
 
 Task("Patch-AppX-Info")
-    .WithCriteria(() => patch)
     .Does(() =>
 {
     var manifest = File("./src/Jarvis.Package/Package.appxmanifest");
@@ -96,9 +95,9 @@ Task("Copy-Binaries")
     .IsDependentOn("Build")
     .Does(() => 
 {
-    CopyFiles($"./src/Jarvis/bin/{configuration}/*", "./.artifacts/bin");
-    CopyFiles($"./src/Jarvis/bin/{configuration}/*", "./.artifacts/installer/bin");
-    CopyFiles($"./src/Jarvis.Package/AppPackages/Jarvis.Package_{version.MsiVersion}.0_*/**/*", "./.artifacts/appx");
+    CopyFiles($"./src/Jarvis/bin/{configuration}/net47/*", "./.artifacts/bin");
+    CopyFiles($"./src/Jarvis/bin/{configuration}/net47/*", "./.artifacts/installer/bin");
+    CopyFiles($"./src/Jarvis.Package/bin/AnyCPU/{configuration}/**/*", "./.artifacts/appx");
 
     DeleteFiles("./.artifacts/installer/bin/*.xml");
     DeleteFiles("./.artifacts/installer/bin/*.pdb");

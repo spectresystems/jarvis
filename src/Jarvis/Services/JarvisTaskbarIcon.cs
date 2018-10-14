@@ -14,7 +14,7 @@ namespace Jarvis.Services
     {
         private readonly TaskbarIcon _icon;
 
-        public JarvisTaskbarIcon(JarvisApplication application, TaskbarIconViewModel viewModel)
+        public JarvisTaskbarIcon(App application, TaskbarIconViewModel viewModel)
         {
             _icon = (TaskbarIcon)application.FindResource("SystemTrayIcon");
             if (_icon != null)

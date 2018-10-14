@@ -8,7 +8,7 @@ using System.Windows;
 
 namespace Jarvis
 {
-    public partial class JarvisApplication : IDisposable
+    public partial class App : IDisposable
     {
         private Mutex _mutex;
 
