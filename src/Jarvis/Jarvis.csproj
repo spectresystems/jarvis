@@ -130,6 +130,7 @@
     <Compile Include="Infrastructure\DelegateCommand.cs" />
     <Compile Include="Infrastructure\Diagnostics\SerilogLog.cs" />
     <Compile Include="Infrastructure\Utilities\PathUtility.cs" />
+    <Compile Include="Infrastructure\Utilities\UwpUtility.cs" />
     <Compile Include="Infrastructure\Utilities\WindowUtility.cs" />
     <Compile Include="JarvisApplication.xaml.cs">
       <DependentUpon>JarvisApplication.xaml</DependentUpon>
@@ -165,7 +166,7 @@
     <Compile Include="Services\Updating\JarvisUpdateInfo.cs" />
     <Compile Include="Services\Updating\UpdateChecker.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
-    <Compile Include="ViewModels\Settings\GeneralSettingsViewModel.cs" />
+    <Compile Include="ViewModels\Settings\UpdateSettingsViewModel.cs" />
     <Compile Include="ViewModels\ResultViewModel.cs" />
     <Compile Include="ViewModels\SettingsViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
@@ -204,7 +205,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Settings\GeneralSettingsView.xaml">
+    <Page Include="Views\Settings\UpdateSettingsView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

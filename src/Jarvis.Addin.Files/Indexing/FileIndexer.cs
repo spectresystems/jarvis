@@ -45,6 +45,11 @@ namespace Jarvis.Addin.Files.Indexing
             events.Subscribe(this);
         }
 
+        public bool Enabled()
+        {
+            return true;
+        }
+
         public Task<bool> Run(CancellationToken token)
         {
             return Task.Run(() =>

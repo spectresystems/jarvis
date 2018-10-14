@@ -15,16 +15,26 @@ namespace Jarvis.ViewModels
 {
     public sealed class SettingsViewModel : Conductor<ISettings>.Collection.OneActive
     {
+        private readonly ApplicationService _application;
         private readonly SettingsService _settings;
 
         public delegate SettingsViewModel Factory();
 
         public string ValidationMessage { get; set; }
 
-        public SettingsViewModel(IEnumerable<IQueryProvider> providers, SettingsService settings, ILifetimeScope scope)
+        public SettingsViewModel(
+            IEnumerable<IQueryProvider> providers, ApplicationService application,
+            SettingsService settings, ILifetimeScope scope)
         {
+            _application = application;
             _settings = settings;
-            Items.Add(new GeneralSettingsViewModel());
+
+            if (application.IsRunningAsUwp())
+            {
+                // Only show update settings if not running
+                // as an UWP application.
+                Items.Add(new UpdateSettingsViewModel());
+            }
 
             foreach (var provider in providers)
             {

@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap">
-  <Identity Name="e042f0a3-0e04-49d6-9f96-43eb02b90042" Publisher="CN=mpagani" Version="1.0.0.0" />
+  <Identity Name="SpectreSystemsAB.Jarvis-Yourroboticbutler" Publisher="CN=BD765503-99E8-40AA-91EC-B3E295890BB4" Version="0.9.10009.0" />
   <Properties>
-    <DisplayName>Jarvis</DisplayName>
-    <PublisherDisplayName>SpectreSystems</PublisherDisplayName>
+    <DisplayName>Jarvis - Your robotic butler</DisplayName>
+    <PublisherDisplayName>Spectre Systems AB</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>

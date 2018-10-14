@@ -10,6 +10,7 @@ namespace Jarvis.Core.Threading
     public interface IBackgroundWorker
     {
         string Name { get; }
+        bool Enabled();
         Task<bool> Run(CancellationToken token);
     }
 }

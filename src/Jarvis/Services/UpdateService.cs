@@ -19,17 +19,24 @@ namespace Jarvis.Services
         private readonly IUpdateChecker _checker;
         private readonly ISettingsStore _settings;
         private readonly IEventAggregator _eventAggregator;
+        private readonly ApplicationService _application;
         private readonly IJarvisLog _log;
 
         public string Name => "Update service";
 
         public UpdateService(IUpdateChecker checker, ISettingsStore settings,
-            IEventAggregator eventAggregator, IJarvisLog log)
+            IEventAggregator eventAggregator, ApplicationService application, IJarvisLog log)
         {
             _checker = checker;
             _settings = settings;
             _eventAggregator = eventAggregator;
+            _application = application;
             _log = new LogDecorator("UpdateService", log);
+        }
+
+        public bool Enabled()
+        {
+            return !_application.IsRunningAsUwp();
         }
 
         public async Task<bool> Run(CancellationToken token)

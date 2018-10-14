@@ -22,6 +22,11 @@ namespace Jarvis.Services
             _application = application;
         }
 
+        public bool IsRunningAsUwp()
+        {
+            return UwpUtility.IsRunningAsUwp();
+        }
+
         public bool IsWindowsShuttingDown()
         {
             return Win32.System.GetSystemMetrics(Win32.System.W32SystemMetric.ShuttingDown) != 0;

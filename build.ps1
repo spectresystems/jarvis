@@ -2,7 +2,7 @@ $ENV:CAKE_NUGET_USEINPROCESSCLIENT='true'
 $ToolPath = Join-Path $PSScriptRoot "tools"
 $NugetPath = Join-Path $ToolPath "nuget.exe"
 $NugetUrl = "https://dist.nuget.org/win-x86-commandline/latest/nuget.exe"
-$CakeVersion = "0.25.0"
+$CakeVersion = "0.30.0"
 
 # Make sure tools folder exists
 $PSScriptRoot = Split-Path $MyInvocation.MyCommand.Path -Parent
@@ -29,9 +29,7 @@ Function Unzip
     [System.IO.Compression.ZipFile]::ExtractToDirectory($zipfile, $outpath)
 }
 
-
 # Make sure Cake has been installed.
-#https://www.nuget.org/api/v2/package
 $NugetFeed = 'https://www.myget.org/F/cake/api/v2/package'
 
 $CakePath = Join-Path $ToolPath "cake.$CakeVersion/Cake.exe"

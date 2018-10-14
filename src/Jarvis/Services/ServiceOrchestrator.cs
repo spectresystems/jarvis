@@ -43,6 +43,12 @@ namespace Jarvis.Services
             // Start all tasks.
             foreach (var worker in _workers)
             {
+                if (!worker.Enabled())
+                {
+                    _log.Information($"Service {worker.Name} will not be started.");
+                    continue;
+                }
+
                 _tasks.Add(new TaskWrapper(worker, _log).Start(_source));
             }
 

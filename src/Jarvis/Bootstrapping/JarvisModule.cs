@@ -9,6 +9,7 @@ using Caliburn.Micro;
 using Jarvis.Bootstrapping.Seeding;
 using Jarvis.Core;
 using Jarvis.Core.Threading;
+using Jarvis.Infrastructure.Utilities;
 using Jarvis.Services;
 using Jarvis.ViewModels;
 using Spectre.System.IO;
@@ -27,7 +28,7 @@ namespace Jarvis.Bootstrapping
             // Core
             builder.RegisterType<FileSystem>().As<IFileSystem>().SingleInstance();
 
-            // Background services.
+            // Background services
             builder.RegisterType<ServiceOrchestrator>().SingleInstance();
             builder.RegisterType<UpdateService>().As<IBackgroundWorker>().SingleInstance();
 

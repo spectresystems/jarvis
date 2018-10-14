@@ -32,6 +32,7 @@ Task("Clean")
 {
     CleanDirectory("./.artifacts");
     CleanDirectory("./.artifacts/bin");
+    CleanDirectory("./.artifacts/appx");
     CleanDirectory("./.artifacts/installer");
     CleanDirectory("./.artifacts/installer/bin");
 });
@@ -58,12 +59,28 @@ Task("Patch-Version")
     });
 });
 
+Task("Patch-AppX-Info")
+    .WithCriteria(() => patch)
+    .Does(() =>
+{
+    var manifest = File("./src/Jarvis.Package/Package.appxmanifest");
+    var settings = new XmlPokeSettings 
+    {
+        Namespaces = {{ "c", "http://schemas.microsoft.com/appx/manifest/foundation/windows10" }}
+    };
+
+    XmlPoke(manifest, "c:Package/c:Identity/@Version", $"{version.MsiVersion}.0", settings);
+});
+
 Task("Build")
     .IsDependentOn("Restore")
     .IsDependentOn("Patch-Version")
+    .IsDependentOn("Patch-AppX-Info")
     .Does(() => 
 {
    MSBuild("./src/Jarvis.sln", new MSBuildSettings()
+        .WithProperty("AppxBundlePlatforms", "neutral")
+        .WithProperty("AppxBundle", "Always")
         .SetConfiguration(configuration)
         .SetVerbosity(Verbosity.Minimal));
 });
@@ -81,6 +98,7 @@ Task("Copy-Binaries")
 {
     CopyFiles($"./src/Jarvis/bin/{configuration}/*", "./.artifacts/bin");
     CopyFiles($"./src/Jarvis/bin/{configuration}/*", "./.artifacts/installer/bin");
+    CopyFiles($"./src/Jarvis.Package/AppPackages/Jarvis.Package_{version.MsiVersion}.0_*/**/*", "./.artifacts/appx");
 
     DeleteFiles("./.artifacts/installer/bin/*.xml");
     DeleteFiles("./.artifacts/installer/bin/*.pdb");

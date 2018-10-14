@@ -7,9 +7,9 @@ using Jarvis.Core;
 
 namespace Jarvis.ViewModels.Settings
 {
-    public sealed class GeneralSettingsViewModel : Screen, ISettings
+    public sealed class UpdateSettingsViewModel : Screen, ISettings
     {
-        public string Name => "General";
+        public string Name => "Update";
 
         public bool CheckForUpdates { get; set; }
         public bool IncludePreviews { get; set; }
