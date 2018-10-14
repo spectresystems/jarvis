@@ -20,9 +20,11 @@
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.props" />
   <PropertyGroup>
     <ProjectGuid>121a7682-edca-4031-b9bf-3b01ea6675dd</ProjectGuid>
-    <TargetPlatformVersion>10.0.17134.0</TargetPlatformVersion>
+    <TargetPlatformVersion>10.0.16299.0</TargetPlatformVersion>
     <TargetPlatformMinVersion>10.0.15063.0</TargetPlatformMinVersion>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+    <AppxBundle>Always</AppxBundle>
     <PackageCertificateKeyFile>Jarvis.Package_TemporaryKey.pfx</PackageCertificateKeyFile>
     <EntryPointProjectUniqueName>..\Jarvis\Jarvis.csproj</EntryPointProjectUniqueName>
     <PackageCertificateThumbprint>E018FA042C858503529CA2F55A2CF3B1BB569312</PackageCertificateThumbprint>
@@ -81,7 +83,7 @@
     <Content Include="Images\Wide310x150Logo.scale-400.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Jarvis\Jarvis.csproj" />
+    <ProjectReference Include="..\Jarvis\Jarvis.csproj" SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
   <Import Project="$(WapProjPath)\Microsoft.DesktopBridge.targets" />
 </Project>

@@ -13,10 +13,10 @@ namespace Jarvis.Services
     [UsedImplicitly]
     public sealed class ApplicationService
     {
-        private readonly JarvisApplication _application;
+        private readonly App _application;
 
         public ApplicationService(
-            JarvisApplication application,
+            App application,
             IEventAggregator inbox)
         {
             _application = application;

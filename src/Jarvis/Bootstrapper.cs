@@ -37,7 +37,7 @@ namespace Jarvis
 
             // Configure container.
             var builder = new ContainerBuilder();
-            builder.RegisterInstance(Application).As<JarvisApplication>();
+            builder.RegisterInstance(Application).As<App>();
             builder.RegisterModule(new JarvisModule());
             builder.RegisterModule<UpdaterModule>();
             builder.RegisterModule<LoggingModule>();
