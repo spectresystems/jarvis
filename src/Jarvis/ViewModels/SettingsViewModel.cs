@@ -29,7 +29,7 @@ namespace Jarvis.ViewModels
             _application = application;
             _settings = settings;
 
-            if (application.IsRunningAsUwp())
+            if (!application.IsRunningAsUwp())
             {
                 // Only show update settings if not running
                 // as an UWP application.
