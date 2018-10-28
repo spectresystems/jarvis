@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap">
-  <Identity Name="SpectreSystemsAB.Jarvis-Yourroboticbutler" Publisher="CN=BD765503-99E8-40AA-91EC-B3E295890BB4" Version="0.9.10009.0" />
+<Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities" IgnorableNamespaces="uap mp rescap desktop">
+  
+  <Identity Name="SpectreSystemsAB.Jarvis-Yourroboticbutler" Publisher="CN=BD765503-99E8-40AA-91EC-B3E295890BB4" Version="0.9.10014.0" />
   <Properties>
     <DisplayName>Jarvis - Your robotic butler</DisplayName>
     <PublisherDisplayName>Spectre Systems AB</PublisherDisplayName>
     <Logo>Images\StoreLogo.png</Logo>
   </Properties>
   <Dependencies>
-    <TargetDeviceFamily Name="Windows.Universal" MinVersion="10.0.0.0" MaxVersionTested="10.0.0.0" />
     <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.14393.0" MaxVersionTested="10.0.14393.0" />
   </Dependencies>
   <Resources>
@@ -25,10 +25,16 @@
         </uap:DefaultTile>
         <uap:SplashScreen Image="Images\SplashScreen.png" />
       </uap:VisualElements>
+      <Extensions>
+        <desktop:Extension Category="windows.startupTask" Executable="Jarvis/Jarvis.exe" EntryPoint="$targetentrypoint$">
+          <desktop:StartupTask TaskId="Jarvis" Enabled="true" DisplayName="Jarvis" />
+        </desktop:Extension>
+      </Extensions>
     </Application>
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
     <rescap:Capability Name="runFullTrust" />
   </Capabilities>
+  
 </Package>
