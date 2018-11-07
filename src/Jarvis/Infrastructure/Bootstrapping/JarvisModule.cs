@@ -6,16 +6,15 @@ using System;
 using System.ComponentModel;
 using Autofac;
 using Caliburn.Micro;
-using Jarvis.Bootstrapping.Seeding;
 using Jarvis.Core;
 using Jarvis.Core.Threading;
-using Jarvis.Infrastructure.Utilities;
+using Jarvis.Infrastructure.Bootstrapping.Seeding;
 using Jarvis.Services;
 using Jarvis.ViewModels;
 using Spectre.System.IO;
 using Module = Autofac.Module;
 
-namespace Jarvis.Bootstrapping
+namespace Jarvis.Infrastructure.Bootstrapping
 {
     public sealed class JarvisModule : Module
     {

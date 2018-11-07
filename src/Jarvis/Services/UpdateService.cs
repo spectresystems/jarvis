@@ -31,7 +31,7 @@ namespace Jarvis.Services
             _settings = settings;
             _eventAggregator = eventAggregator;
             _application = application;
-            _log = new LogDecorator("UpdateService", log);
+            _log = new LogDecorator(nameof(UpdateService), log);
         }
 
         public bool Enabled()

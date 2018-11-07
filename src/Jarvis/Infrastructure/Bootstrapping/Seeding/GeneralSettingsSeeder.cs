@@ -4,7 +4,7 @@
 
 using Jarvis.Core;
 
-namespace Jarvis.Bootstrapping.Seeding
+namespace Jarvis.Infrastructure.Bootstrapping.Seeding
 {
     public sealed class GeneralSettingsSeeder : ISettingsSeeder
     {

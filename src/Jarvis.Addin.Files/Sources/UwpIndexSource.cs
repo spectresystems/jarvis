@@ -31,7 +31,7 @@ namespace Jarvis.Addin.Files.Sources
         {
             _reader = reader;
             _fileSystem = fileSystem;
-            _log = log;
+            _log = new LogDecorator(nameof(UwpIndexSource), log);
         }
 
         public IEnumerable<IndexedEntry> Index()
@@ -56,7 +56,7 @@ namespace Jarvis.Addin.Files.Sources
                 }
             }
 
-           return result;
+            return result;
         }
 
         private bool TryGetIndexedEntry(Package package, out IndexedEntry[] entry)
@@ -67,21 +67,23 @@ namespace Jarvis.Addin.Files.Sources
                 if (_fileSystem.File.Exists(file))
                 {
                     var manifest = _reader.Read(file);
-
-                    entry = new IndexedEntry[manifest.Applications.Count];
-                    for (var index = 0; index < manifest.Applications.Count; index++)
+                    if (manifest != null)
                     {
-                        var app = manifest.Applications[index];
+                        entry = new IndexedEntry[manifest.Applications.Count];
+                        for (var index = 0; index < manifest.Applications.Count; index++)
+                        {
+                            var app = manifest.Applications[index];
 
-                        entry[index] = new UwpIndexSourceEntry(
-                            $"{manifest.Id}.{app.Id}",
-                            app.AppUserModelId,
-                            app.DisplayName,
-                            GetIcon(manifest, app),
-                            manifest.Description ?? manifest.Publisher);
+                            entry[index] = new UwpIndexSourceEntry(
+                                $"{manifest.Id}.{app.Id}",
+                                app.AppUserModelId,
+                                app.DisplayName,
+                                GetIcon(manifest, app),
+                                manifest.Description ?? manifest.Publisher);
+                        }
+
+                        return true;
                     }
-
-                    return true;
                 }
             }
 

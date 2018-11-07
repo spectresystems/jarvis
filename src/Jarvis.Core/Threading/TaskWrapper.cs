@@ -44,6 +44,15 @@ namespace Jarvis.Core.Threading
                 {
                     _log.Information($"{Name} aborted.");
                 }
+                catch (AggregateException ex)
+                {
+                    var exceptions = ex.Flatten().InnerExceptions;
+                    foreach (var exception in exceptions)
+                    {
+                        _log.Error($"{Name}: {ex.Message} ({ex.GetType().FullName})");
+                    }
+                    _source.Cancel();
+                }
                 catch (Exception ex)
                 {
                     _log.Error($"{Name}: {ex.Message} ({ex.GetType().FullName})");

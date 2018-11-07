@@ -12,7 +12,7 @@ using Caliburn.Micro;
 using Jarvis.Core;
 using Module = Autofac.Module;
 
-namespace Jarvis.Bootstrapping
+namespace Jarvis.Infrastructure.Bootstrapping
 {
     public sealed class AddinModule : Module
     {

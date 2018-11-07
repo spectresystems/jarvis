@@ -22,9 +22,16 @@ namespace Jarvis
         {
             if (disposing && _mutex != null)
             {
-                _mutex.ReleaseMutex();
-                _mutex.Close();
-                _mutex = null;
+                try
+                {
+                    _mutex.ReleaseMutex();
+                    _mutex.Close();
+                    _mutex = null;
+                }
+                catch
+                {
+                    // Nothing we can do about this.
+                }
             }
         }
 
