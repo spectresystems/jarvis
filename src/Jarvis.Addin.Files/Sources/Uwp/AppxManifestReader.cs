@@ -21,7 +21,7 @@ namespace Jarvis.Addin.Files.Sources.Uwp
         {
             _fileSystem = fileSystem;
             _streamProvider = streamProvider;
-            _log = log;
+            _log = new LogDecorator(nameof(AppxManifestReader), _log);
         }
 
         public AppxManifest Read(FilePath path)

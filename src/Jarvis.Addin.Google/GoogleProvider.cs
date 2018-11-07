@@ -30,7 +30,7 @@ namespace Jarvis.Addin.Google
 
         public GoogleProvider(IJarvisLog log)
         {
-            _log = log;
+            _log = new LogDecorator(nameof(GoogleProvider), log);
             _client = new HttpClient();
             _googleIcon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.Google;component/Resources/Google.png"));
             _linkIcon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.Google;component/Resources/Link.png"));

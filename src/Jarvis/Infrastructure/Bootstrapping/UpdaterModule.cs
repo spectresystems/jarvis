@@ -5,7 +5,7 @@
 using Autofac;
 using Jarvis.Services.Updating;
 
-namespace Jarvis.Bootstrapping
+namespace Jarvis.Infrastructure.Bootstrapping
 {
     public sealed class UpdaterModule : Module
     {

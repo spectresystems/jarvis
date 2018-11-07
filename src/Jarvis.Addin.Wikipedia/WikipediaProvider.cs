@@ -31,7 +31,7 @@ namespace Jarvis.Addin.Wikipedia
 
         public WikipediaProvider(IJarvisLog log)
         {
-            _log = log;
+            _log = new LogDecorator(nameof(WikipediaProvider), log);
             _client = new HttpClient();
             _icon = new BitmapImage(new Uri("pack://application:,,,/Jarvis.Addin.Wikipedia;component/Resources/Wikipedia.png"));
         }

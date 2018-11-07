@@ -29,7 +29,7 @@ namespace Jarvis.Addin.Files.Sources
         {
             _fileSystem = fileSystem;
             _settings = settings;
-            _log = log;
+            _log = new LogDecorator(nameof(DocumentIndexSource), log);
         }
 
         public IEnumerable<IndexedEntry> Index()

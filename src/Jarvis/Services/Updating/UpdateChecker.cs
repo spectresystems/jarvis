@@ -28,7 +28,7 @@ namespace Jarvis.Services.Updating
         public UpdateChecker(ISettingsStore settings, IJarvisLog log)
         {
             _settings = settings;
-            _log = log;
+            _log = new LogDecorator(nameof(UpdateChecker), log);
             _currentVersion = new SemVersion(typeof(UpdateService).Assembly.GetName().Version);
 
             _client = new HttpClient();

@@ -25,7 +25,7 @@ namespace Jarvis.Services
         {
             _fileSystem = fileSystem;
             _seeders = new List<ISettingsSeeder>(seeders);
-            _log = log;
+            _log = new LogDecorator(nameof(SettingsService), log);
             _lock = new object();
             _settings = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             _dirty = false;

@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using IWshRuntimeLibrary;
 using Jarvis.Addin.Files.Extensions;
 using Jarvis.Addin.Files.Indexing;
+using Jarvis.Core.Diagnostics;
 using JetBrains.Annotations;
 using Spectre.System.IO;
 using IFile = Spectre.System.IO.IFile;
@@ -20,23 +21,22 @@ namespace Jarvis.Addin.Files.Sources
     internal sealed class StartMenuIndexSource : IFileIndexSource
     {
         private readonly IFileSystem _fileSystem;
+        private readonly IJarvisLog _log;
 
         public string Name => "Start menu";
 
-        public StartMenuIndexSource(IFileSystem fileSystem)
+        public StartMenuIndexSource(IFileSystem fileSystem, IJarvisLog log)
         {
             _fileSystem = fileSystem;
+            _log = new LogDecorator(nameof(StartMenuIndexSource), log);
         }
 
         public IEnumerable<IndexedEntry> Index()
         {
-            var common = _fileSystem.GetDirectory(new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu)));
-            var roaming = _fileSystem.GetDirectory(new DirectoryPath(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu)));
-            var files = common.GetFiles("*.lnk", SearchScope.Recursive)
-                .Concat(common.GetFiles("*.url", SearchScope.Recursive))
-                .Concat(roaming.GetFiles("*.lnk", SearchScope.Recursive))
-                .Concat(roaming.GetFiles("*.url", SearchScope.Recursive));
+            var common = GetFilesInSpecialFolder(Environment.SpecialFolder.CommonStartMenu);
+            var roaming = GetFilesInSpecialFolder(Environment.SpecialFolder.StartMenu);
 
+            var files = common.Concat(roaming);
             foreach (var file in files)
             {
                 var shortcut = GetShortcut(file);
@@ -51,6 +51,21 @@ namespace Jarvis.Addin.Files.Sources
                     SafeCom(() => string.IsNullOrWhiteSpace(shortcut?.Description)
                         ? targetPath?.FullPath?.Replace('\\', '/') ?? file.Path.FullPath
                         : shortcut.Description?.Replace('\\', '/')));
+            }
+        }
+
+        private IEnumerable<IFile> GetFilesInSpecialFolder(Environment.SpecialFolder folder)
+        {
+            try
+            {
+                var directory = _fileSystem.GetDirectory(new DirectoryPath(Environment.GetFolderPath(folder)));
+                return directory.GetFiles("*.lnk", SearchScope.Recursive)
+                    .Concat(directory.GetFiles("*.url", SearchScope.Recursive));
+            }
+            catch (Exception ex)
+            {
+                _log.Error($"An error occured while indexing '{folder}': {ex.Message}");
+                return Enumerable.Empty<IFile>();
             }
         }
 

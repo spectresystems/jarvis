@@ -116,9 +116,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Bootstrapping\AddinModule.cs" />
-    <Compile Include="Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
-    <Compile Include="Bootstrapping\UpdaterModule.cs" />
+    <Compile Include="Infrastructure\Bootstrapping\AddinModule.cs" />
+    <Compile Include="Infrastructure\Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
+    <Compile Include="Infrastructure\Bootstrapping\UpdaterModule.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Infrastructure\Utilities\KeyboardHook.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
@@ -137,8 +137,8 @@
     </Compile>
     <Compile Include="Messages\ExitMessage.cs" />
     <Compile Include="Messages\UpdateAvailableMessage.cs" />
-    <Compile Include="Bootstrapping\JarvisModule.cs" />
-    <Compile Include="Bootstrapping\LoggingModule.cs" />
+    <Compile Include="Infrastructure\Bootstrapping\JarvisModule.cs" />
+    <Compile Include="Infrastructure\Bootstrapping\LoggingModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

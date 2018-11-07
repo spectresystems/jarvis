@@ -12,7 +12,7 @@ using Serilog;
 using Spectre.System.IO;
 #endif
 
-namespace Jarvis.Bootstrapping
+namespace Jarvis.Infrastructure.Bootstrapping
 {
     public sealed class LoggingModule : Module
     {
