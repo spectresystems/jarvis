@@ -74,8 +74,8 @@ namespace Jarvis.Addin.Files.Indexing
                     foreach (var file in result)
                     {
                         // Index individual words as well as combinations.
-                        Index(trie, file.Title, file);
-                        Index(trie, file.Description, file);
+                        Index(trie, file.Title, file, true);
+                        Index(trie, file.Description, file, false);
 
                         // Also index the whole words without tokenization.
                         trie.Insert(file.Title, file);
@@ -86,8 +86,8 @@ namespace Jarvis.Addin.Files.Indexing
                             if (entryWithPath.Path is FilePath filePath)
                             {
                                 // Index individual words as well as combinations.
-                                Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file);
-                                Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file);
+                                Index(trie, filePath.GetFilenameWithoutExtension().FullPath, file, false);
+                                Index(trie, filePath.GetFilename().RemoveExtension().FullPath, file, false);
 
                                 // Also index the whole words without tokenization.
                                 trie.Insert(filePath.GetFilenameWithoutExtension().FullPath, file);
@@ -146,7 +146,7 @@ namespace Jarvis.Addin.Files.Indexing
                 .ToList();
         }
 
-        private void Index(Trie<IndexedEntry> trie, string word, IndexedEntry entry)
+        private void Index(Trie<IndexedEntry> trie, string word, IndexedEntry entry, bool permutations)
         {
             if (string.IsNullOrWhiteSpace(word))
             {
@@ -172,8 +172,18 @@ namespace Jarvis.Addin.Files.Indexing
                     }
                 }
 
-                // Build partial sentence.
-                trie.Insert(string.Join(" ", parts.Skip(i).Take(parts.Length - i)), entry);
+                if (permutations)
+                {
+                    // Build partial sentence.
+                    trie.Insert(string.Join(" ", parts.Skip(i).Take(parts.Length - i)), entry);
+
+                    // Build all possible permutations.
+                    for (var j = i + 1; j < parts.Length; j++)
+                    {
+                        var temp = string.Concat(parts[i], " ", parts[j]);
+                        trie.Insert(temp, entry);
+                    }
+                }
             }
         }
 
