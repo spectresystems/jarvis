@@ -120,7 +120,9 @@
     <Compile Include="Infrastructure\Bootstrapping\Seeding\GeneralSettingsSeeder.cs" />
     <Compile Include="Infrastructure\Bootstrapping\UpdaterModule.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Infrastructure\Utilities\KeyboardHook.cs" />
+    <Compile Include="Infrastructure\Input\Hooks\GlobalKeyboardHook.cs" />
+    <Compile Include="Infrastructure\Input\Hooks\HotKeyKeyboardHook.cs" />
+    <Compile Include="Infrastructure\Input\IKeyboardHook.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\BindableRichTextBox.cs" />
     <Compile Include="Infrastructure\Presentation\Controls\IconControl.xaml.cs">
       <DependentUpon>IconControl.xaml</DependentUpon>
@@ -154,6 +156,7 @@
     </Compile>
     <Compile Include="Services\ApplicationService.cs" />
     <Compile Include="Services\JarvisTaskbarIcon.cs" />
+    <Compile Include="Services\KeyboardService.cs" />
     <Compile Include="Services\Updating\GitHubReleaseAsset.cs" />
     <Compile Include="Services\WindowService.cs" />
     <Compile Include="Services\QueryProviderService.cs" />

@@ -10,21 +10,42 @@ using System.Runtime.InteropServices;
 using System.Windows.Input;
 using Jarvis.Core.Interop;
 
-namespace Jarvis.Infrastructure.Utilities
+namespace Jarvis.Infrastructure.Input
 {
     [SuppressMessage("ReSharper", "PrivateFieldCanBeConvertedToLocalVariable")]
-    public sealed class KeyboardHook : CriticalFinalizerObject, IDisposable
+    public sealed class GlobalKeyboardHook : CriticalFinalizerObject, IDisposable, IKeyboardHook
     {
         private readonly Action _action;
-        private readonly IntPtr _hook;
         private readonly Win32.Keyboard.HookCallback _callback;
+        private IntPtr _hook;
         private bool _disposed;
 
-        public KeyboardHook(Action action)
+        public GlobalKeyboardHook(Action action)
         {
             _action = action;
             _callback = Callback;
+        }
 
+        ~GlobalKeyboardHook()
+        {
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                if (_hook != IntPtr.Zero)
+                {
+                    Win32.Keyboard.UnhookWindowsHookEx(_hook);
+                }
+                _disposed = true;
+            }
+            GC.SuppressFinalize(this);
+        }
+
+        public void Register()
+        {
             using (var curProcess = Process.GetCurrentProcess())
             using (var curModule = curProcess.MainModule)
             {
@@ -33,11 +54,6 @@ namespace Jarvis.Infrastructure.Utilities
                     _callback,
                     Win32.Process.GetModuleHandle(curModule.ModuleName), 0);
             }
-        }
-
-        ~KeyboardHook()
-        {
-            Dispose();
         }
 
         private IntPtr Callback(int nCode, IntPtr wParam, IntPtr lParam)
@@ -60,19 +76,6 @@ namespace Jarvis.Infrastructure.Utilities
                 }
             }
             return Win32.Keyboard.CallNextHookEx(_hook, nCode, wParam, lParam);
-        }
-
-        public void Dispose()
-        {
-            if (!_disposed)
-            {
-                if (_hook != IntPtr.Zero)
-                {
-                    Win32.Keyboard.UnhookWindowsHookEx(_hook);
-                }
-                _disposed = true;
-            }
-            GC.SuppressFinalize(this);
         }
     }
 }

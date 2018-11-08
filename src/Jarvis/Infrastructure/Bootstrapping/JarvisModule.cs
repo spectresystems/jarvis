@@ -36,6 +36,7 @@ namespace Jarvis.Infrastructure.Bootstrapping
             builder.RegisterType<ApplicationService>().SingleInstance();
             builder.RegisterType<WindowService>().SingleInstance();
             builder.RegisterType<SettingsService>().AsSelf().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<KeyboardService>().AsSelf().AsImplementedInterfaces().SingleInstance();
 
             // Misc
             builder.RegisterType<JarvisTaskbarIcon>().SingleInstance();
