@@ -22,7 +22,6 @@ namespace Jarvis
     public class Bootstrapper : BootstrapperBase
     {
         private IContainer _container;
-        private IDisposable _hotKey;
         private JarvisTaskbarIcon _taskbarIcon;
 
         public Bootstrapper()
@@ -73,22 +72,20 @@ namespace Jarvis
 
             // Start all background services.
             IoC.Get<ServiceOrchestrator>().Start();
-
-            // Register the hotkey.
-            var service = IoC.Get<ApplicationService>();
-            _hotKey = new KeyboardHook(() => service.Toggle());
         }
 
         protected override void OnExit(object sender, EventArgs e)
         {
             // Unregister the hot key
-            _hotKey?.Dispose();
             _taskbarIcon?.Dispose();
 
             // Stop the service orchestrator.
             var services = IoC.Get<ServiceOrchestrator>();
             services.Stop();
             services.Join();
+
+            // Dispose the container.
+            _container.Dispose();
         }
 
         protected override object GetInstance(Type service, string key)

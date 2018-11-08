@@ -58,7 +58,7 @@ namespace Jarvis.Services
 
         public void Stop()
         {
-            if (!_source.IsCancellationRequested)
+            if (_source != null && !_source.IsCancellationRequested)
             {
                 _log.Information("We were instructed to stop.");
                 _source.Cancel();

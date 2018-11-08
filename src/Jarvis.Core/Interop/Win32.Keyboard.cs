@@ -13,6 +13,17 @@ namespace Jarvis.Core.Interop
     {
         public static class Keyboard
         {
+            public static class HotKey
+            {
+                [DllImport("user32.dll")]
+                public static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vlc);
+
+                [DllImport("user32.dll")]
+                public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+                public const int WmHotKey = 0x0312;
+            }
+
             public delegate IntPtr HookCallback(int nCode, IntPtr wParam, IntPtr lParam);
 
 #pragma warning disable SA1310 // Field names must not contain underscore
