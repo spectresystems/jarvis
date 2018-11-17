@@ -73,6 +73,13 @@ namespace Jarvis.Services
             });
 
             await Task.WhenAll(tasks);
+
+            if (!target.Any())
+            {
+                // Default to Google now, but may be set by user in Settings in future
+                var provider = GetProviders(new Query($"g {query.Raw}")).First();
+                target.Add(await provider.CreateFallbackResult(query.Raw));
+            }
         }
 
         public async Task Execute(IQueryResult result)

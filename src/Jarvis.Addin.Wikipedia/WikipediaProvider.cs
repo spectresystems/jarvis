@@ -77,13 +77,7 @@ namespace Jarvis.Addin.Wikipedia
 
                     if (!results.Any())
                     {
-                        var fallbackUrl = new Uri($"https://en.wikipedia.org/wiki/{Encode(query.Argument)}");
-                        return new[]
-                        {
-                            (IQueryResult)new WikipediaResult(
-                                fallbackUrl, $"Search Wikipedia for '{query.Argument}'",
-                                fallbackUrl.AbsoluteUri, 0, 0)
-                        };
+                        return new[] { await CreateFallbackResult(query.Argument) };
                     }
 
                     return results;
@@ -95,6 +89,14 @@ namespace Jarvis.Addin.Wikipedia
             }
 
             return Enumerable.Empty<IQueryResult>();
+        }
+
+        protected override Task<IQueryResult> CreateFallbackResult(string query)
+        {
+            var fallbackUrl = new Uri($"https://en.wikipedia.org/wiki/{Encode(query)}");
+            return Task.FromResult((IQueryResult)new WikipediaResult(
+                    fallbackUrl, $"Search Wikipedia for '{query}'",
+                    fallbackUrl.AbsoluteUri, 0, 0));
         }
 
         protected override Task ExecuteAsync(WikipediaResult result)

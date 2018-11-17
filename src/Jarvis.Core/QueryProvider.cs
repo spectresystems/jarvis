@@ -33,8 +33,14 @@ namespace Jarvis.Core
             return ExecuteAsync((TResult)result);
         }
 
+        Task<IQueryResult> IQueryProvider.CreateFallbackResult(string query)
+        {
+            return CreateFallbackResult(query);
+        }
+
         protected abstract Task<ImageSource> GetIconAsync(TResult result);
         protected abstract Task ExecuteAsync(TResult result);
+        protected abstract Task<IQueryResult> CreateFallbackResult(string query);
 
         public abstract Task<IEnumerable<IQueryResult>> QueryAsync(Query query);
     }

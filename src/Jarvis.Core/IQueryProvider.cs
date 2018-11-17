@@ -17,6 +17,7 @@ namespace Jarvis.Core
 
         Task<ImageSource> GetIconAsync(IQueryResult result);
         Task<IEnumerable<IQueryResult>> QueryAsync(Query query);
+        Task<IQueryResult> CreateFallbackResult(string query);
         Task ExecuteAsync(IQueryResult result);
     }
 }
